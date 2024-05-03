@@ -27,4 +27,7 @@ public abstract class Menu {
     public static void mainMenu() {
         AtomicBomber.changeScreen(new MainMenuScreen(AtomicBomber.getAtomicBomber()));
     }
+    public static void avatarMenu() {
+        AtomicBomber.changeScreen(new AvatarMenuScreen(AtomicBomber.getAtomicBomber()));
+    }
 }

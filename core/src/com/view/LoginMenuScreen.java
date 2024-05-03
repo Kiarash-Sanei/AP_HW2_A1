@@ -43,7 +43,7 @@ public class LoginMenuScreen extends MenuScreen {
         login = new TextButton("Login", buttonSkin);
         skip = new TextButton("Skip", buttonSkin);
         exit = new TextButton("Exit", buttonSkin);
-        message = new Label(LoginMenuMassage.start.getString(), usernameSkin);
+        message = new Label(LoginMenuMessage.start.getString(), usernameSkin);
         mainTable = new Table();
         table = new Table();
         register.addListener(new ClickListener() {

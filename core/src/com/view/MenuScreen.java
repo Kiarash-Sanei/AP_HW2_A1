@@ -18,14 +18,6 @@ public abstract class MenuScreen implements Screen {
         input.setInputProcessor(stage);
         stage.setViewport(new FillViewport(graphics.getWidth(), graphics.getHeight()));
     }
-    protected MenuScreen getScreen() {
-        return (MenuScreen) atomicBomber.getScreen();
-    }
-
-    protected void setScreen(MenuScreen MenuScreen) {
-        atomicBomber.setScreen(MenuScreen);
-    }
-
     @Override
     public void show() {
     }

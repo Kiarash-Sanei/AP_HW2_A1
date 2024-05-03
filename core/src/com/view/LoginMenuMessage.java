@@ -1,14 +1,13 @@
 package com.view;
 
-public enum LoginMenuMassage {
+public enum LoginMenuMessage {
 
     start("Welcome to the login menu!\n" +
             "You may sign in in this menu first.\n" +
             "Your username must just include english letter or digit.\n" +
             "Your password may include any character except whitespace.\n" +
             "If you don't want to create an account use skip button."),
-    duplicateUsername("This username is already taken!\n" +
-            "Suggestion:\n\n\n"),
+    duplicateUsername("This username is already taken!\n\n\n\n"),
     invalidUsername("This username is invalid!\n" +
             "You have used other character rather than english letter or digit.\n" +
             "Your username must just include english letter or digit.\n\n"),
@@ -22,7 +21,7 @@ public enum LoginMenuMassage {
     directPlay("You have directly started a game.\n\n\n\n");
     private final String string;
 
-    LoginMenuMassage(String string) {
+    LoginMenuMessage(String string) {
         this.string = string;
     }
 
