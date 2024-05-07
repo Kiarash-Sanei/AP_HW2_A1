@@ -21,7 +21,7 @@ public class AtomicBomber extends Game {
 
     @Override
     public void render() {
-        ScreenUtils.clear(1, 1, 1, 0.5f);
+        ScreenUtils.clear(0.169f, 0.098f, 0.239f, 1);
         super.render();
     }
 

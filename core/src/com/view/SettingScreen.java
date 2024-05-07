@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.control.SettingMenu;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -27,6 +28,7 @@ public class SettingScreen extends MenuScreen {
     private TextField clusterBombTextField;
     private Label iceMode;
     private TextField iceModeTextField;
+    private TextButton apply;
     private TextButton mainMenu;
     private TextButton exit;
     private Table mainTable;
@@ -67,6 +69,7 @@ public class SettingScreen extends MenuScreen {
         clusterBombTextField = new TextField("", textFieldSkin);
         iceMode = new Label("Ice Mode: Tab\t", labelSkin);
         iceModeTextField = new TextField("", textFieldSkin);
+        apply = new TextButton("Apply", buttonSkin);
         mainMenu = new TextButton("Main Menu", buttonSkin);
         exit = new TextButton("Exit", buttonSkin);
         mainTable = new Table();
@@ -116,8 +119,8 @@ public class SettingScreen extends MenuScreen {
         });
         regularBombTextField.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-
+            public boolean keyTyped(InputEvent event, char character) {
+                return true;
             }
         });
         radioactiveBombTextField.addListener(new ClickListener() {
@@ -138,16 +141,22 @@ public class SettingScreen extends MenuScreen {
 
             }
         });
-        mainMenu.addListener(new ClickListener() {
+        apply.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
             }
         });
+        mainMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SettingMenu.mainMenu();
+            }
+        });
         exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                SettingMenu.exit();
             }
         });
         mainTable.setBounds(0, 0, graphics.getWidth(), graphics.getHeight());
@@ -187,10 +196,21 @@ public class SettingScreen extends MenuScreen {
         iceModeTable.add(iceModeTextField);
         mainTable.add(iceModeTable);
         mainTable.row();
+        mainTable.add(apply);
+        mainTable.row();
         mainTable.add(mainMenu);
         mainTable.row();
         mainTable.add(exit);
         mainTable.row();
         stage.addActor(mainTable);
+    }
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
     }
 }

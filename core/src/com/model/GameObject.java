@@ -1,15 +1,16 @@
 package com.model;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class GameObject {
-    protected Vector2 position;
-    protected Vector2 velocity;
-    protected int width;
-    protected int height;
-    public GameObject(Vector2 position, Vector2 velocity, int width, int height) {
-        this.position = position;
-        this.velocity = velocity;
+public abstract class GameObject {
+    protected float x;
+    protected float y;
+    protected float width;
+    protected float height;
+    protected Image image;
+    public GameObject(float x, float y, float width, float height) {
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
     }

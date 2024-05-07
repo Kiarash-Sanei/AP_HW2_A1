@@ -12,19 +12,9 @@ public class User implements Serializable {
     private String avatarPath;
     private int score;
     private int lastWave;
-    private Difficulty difficulty;
     private int shootCount;
     private int successfulShootCount;
-    private boolean isMute;
-    private boolean isBlackAndWhite;
-    private String up;
-    private String down;
-    private String right;
-    private String left;
-    private String regularBomb;
-    private String radioactiveBomb;
-    private String clusterBomb;
-    private String iceMode;
+    private Setting setting;
 
     static {
         File directory = new File("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/");
@@ -69,9 +59,9 @@ public class User implements Serializable {
         this.avatarPath = "DefaultAvatars/" + (random.nextInt(4) + 1) + ".png";
         this.score = 0;
         this.lastWave = 0;
-        this.difficulty = Difficulty.easy;
         this.shootCount = 0;
         this.successfulShootCount = 0;
+        this.setting = new Setting();
         if (!Objects.equals(username, "_guest_")) {
             this.save();
             allUsers.add(this);
@@ -226,7 +216,7 @@ public class User implements Serializable {
         Collections.sort(allUsers, new Comparator<User>() {
             @Override
             public int compare(User o1, User o2) {
-                return o1.difficulty.getValue() * o1.score - o2.difficulty.getValue() * o2.score;
+                return o1.setting.getDifficulty().getValue() * o1.score - o2.setting.getDifficulty().getValue() * o2.score;
             }
         });
         for (int i = 0; i < 10 && i < allUsers.size(); i++)
@@ -262,5 +252,9 @@ public class User implements Serializable {
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    public Setting getSetting() {
+        return setting;
     }
 }
