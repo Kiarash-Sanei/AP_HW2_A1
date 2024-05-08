@@ -2,8 +2,8 @@ package com;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.view.LoginMenuScreen;
-import com.view.MenuScreen;
+import com.View.LoginMenuScreen;
+import com.View.MenuScreen;
 
 public class AtomicBomber extends Game {
     private int width, height;
