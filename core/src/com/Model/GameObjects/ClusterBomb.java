@@ -39,8 +39,8 @@ public class ClusterBomb extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
-    @Override
-    public String toString() {
-        return "ClusterBomb";
+
+    public void setAlive(boolean life) {
+        isAlive = life;
     }
 }

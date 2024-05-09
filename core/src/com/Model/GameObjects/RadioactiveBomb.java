@@ -39,8 +39,7 @@ public class RadioactiveBomb extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
-    @Override
-    public String toString() {
-        return "RadioactiveBomb";
+    public void setAlive(boolean life) {
+        isAlive = life;
     }
 }

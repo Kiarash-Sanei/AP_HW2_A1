@@ -12,11 +12,16 @@ import java.util.ArrayList;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class Plane extends GameObject {
+    private boolean isAlive = true;
     private final Setting setting;
     private final float speed = 300;
+    private final float minimumTime = 0.1f;
     private final ArrayList<RegularBomb> regularBombs;
+    private float regularBombTime = minimumTime;
     private final ArrayList<ClusterBomb> clusterBombs;
+    private float clusterBombTime = minimumTime;
     private final ArrayList<RadioactiveBomb> radioactiveBombs;
+    private float radioactiveBombTime = minimumTime;
 
     public Plane(float x, float y, float width, float height, Setting setting) {
         super(x, y, width, height);
@@ -37,7 +42,7 @@ public class Plane extends GameObject {
     }
 
     public void regularBomb() {
-        if (regularBombs.size() < 4) {
+        if (regularBombs.size() < 3) {
             float height = 20;
             float width = height * 958 / 3148;
             this.regularBombs.add(new RegularBomb(x, y, width, height));
@@ -45,7 +50,7 @@ public class Plane extends GameObject {
     }
 
     public void radioactiveBomb() {
-        if (radioactiveBombs.size() < 4) {
+        if (radioactiveBombs.size() < 3) {
             float height = 20;
             float width = height * 694 / 1952;
             this.radioactiveBombs.add(new RadioactiveBomb(x, y, width, height));
@@ -53,7 +58,7 @@ public class Plane extends GameObject {
     }
 
     public void clusterBomb() {
-        if (clusterBombs.size() < 4) {
+        if (clusterBombs.size() < 3) {
             float height = 20;
             float width = height * 1979 / 5524;
             this.clusterBombs.add(new ClusterBomb(x, y, width, height));
@@ -111,12 +116,27 @@ public class Plane extends GameObject {
             x += speed * deltaTime;
         else if (Keyboard.status.get(Keyboard.LEFT))
             x -= speed * deltaTime;
-        if (Keyboard.status.get(Keyboard.REGULAR_BOMB))
-            this.regularBomb();
-        if (Keyboard.status.get(Keyboard.CLUSTER_BOMB))
-            this.clusterBomb();
-        if (Keyboard.status.get(Keyboard.RADIOACTIVE_BOMB))
-            this.radioactiveBomb();
+        if (Keyboard.status.get(Keyboard.REGULAR_BOMB)) {
+            regularBombTime += deltaTime;
+            if (regularBombTime > minimumTime) {
+                this.regularBomb();
+                regularBombTime = 0;
+            }
+        }
+        if (Keyboard.status.get(Keyboard.CLUSTER_BOMB)) {
+            clusterBombTime += deltaTime;
+            if (clusterBombTime > minimumTime) {
+                this.clusterBomb();
+                clusterBombTime = 0;
+            }
+        }
+        if (Keyboard.status.get(Keyboard.RADIOACTIVE_BOMB)) {
+            radioactiveBombTime += deltaTime;
+            if (radioactiveBombTime > minimumTime) {
+                this.radioactiveBomb();
+                radioactiveBombTime = 0;
+            }
+        }
         wrapper();
         image.setPosition(x, y);
         for (RegularBomb regularBomb : regularBombs)
@@ -142,16 +162,19 @@ public class Plane extends GameObject {
         image.draw(batch, 1);
         for (RegularBomb regularBomb : regularBombs)
             regularBomb.draw(batch);
-        regularBombs.removeIf(regularBomb -> !regularBomb.isAlive());
         for (ClusterBomb clusterBomb : clusterBombs)
             clusterBomb.draw(batch);
-        clusterBombs.removeIf(clusterBomb -> !clusterBomb.isAlive());
         for (RadioactiveBomb radioactiveBomb : radioactiveBombs)
             radioactiveBomb.draw(batch);
-        radioactiveBombs.removeIf(radioactiveBomb -> !radioactiveBomb.isAlive());
     }
-    @Override
-    public String toString() {
-        return "Plane";
+
+    public void setAlive(boolean life) {
+        isAlive = life;
+    }
+
+    public void removeIf() {
+        regularBombs.removeIf(regularBomb -> !regularBomb.isAlive());
+        clusterBombs.removeIf(clusterBomb -> !clusterBomb.isAlive());
+        radioactiveBombs.removeIf(radioactiveBomb -> !radioactiveBomb.isAlive());
     }
 }

@@ -2,7 +2,6 @@ package com.View;
 
 import com.AtomicBomber;
 import com.Model.GameObjects.*;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -96,6 +95,7 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
+        GameObject.collision();
         ScreenUtils.clear(1, 1, 1, 1);
         super.render(delta);
         plane.update(delta);
@@ -126,10 +126,12 @@ public class GameMenuScreen extends MenuScreen {
         for (Building building : buildings)
             building.draw(batch);
         batch.end();
+        plane.removeIf();
         tanks.removeIf(tank -> !tank.isAlive());
         trees.removeIf(tree -> !tree.isAlive());
         trenches.removeIf(trench -> !trench.isAlive());
         trucks.removeIf(truck -> !truck.isAlive());
         migs.removeIf(mig -> !mig.isAlive());
+        buildings.removeIf(building -> !building.isAlive());
     }
 }

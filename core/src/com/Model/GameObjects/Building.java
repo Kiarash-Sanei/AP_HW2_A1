@@ -34,8 +34,7 @@ public class Building extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
-    @Override
-    public String toString() {
-        return "Building";
+    public void setAlive(boolean life) {
+        isAlive = life;
     }
 }

@@ -30,4 +30,7 @@ public class Tree extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
+    public void setAlive(boolean life) {
+        isAlive = life;
+    }
 }

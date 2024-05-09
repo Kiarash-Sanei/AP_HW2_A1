@@ -60,8 +60,7 @@ public class Mig extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
-    @Override
-    public String toString() {
-        return "Mig";
+    public void setAlive(boolean life) {
+        isAlive = life;
     }
 }

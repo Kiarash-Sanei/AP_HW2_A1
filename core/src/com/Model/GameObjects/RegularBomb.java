@@ -39,8 +39,8 @@ public class RegularBomb extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
-    @Override
-    public String toString() {
-        return "RegularBomb";
+    public void setAlive(boolean life) {
+        isAlive = life;
+        System.out.println("alkiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
     }
 }

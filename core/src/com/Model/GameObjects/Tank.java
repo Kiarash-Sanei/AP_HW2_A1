@@ -62,4 +62,7 @@ public class Tank extends GameObject {
     public boolean isAlive() {
         return isAlive;
     }
+    public void setAlive(boolean life) {
+        isAlive = life;
+    }
 }
