@@ -1,5 +1,7 @@
-package com.Model;
+package com.Model.GameObjects;
 
+import com.Model.GameObject;
+import com.Model.Setting;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -29,7 +31,7 @@ public class Tank extends GameObject {
                 radius = 0;
                 break;
         }
-        this.image = new Image(new Texture("Tank.png"));
+        this.image = new Image(new Texture("GameObjects/Tank.png"));
         image.setHeight(height);
         image.setWidth(width);
         image.setPosition(x, y);

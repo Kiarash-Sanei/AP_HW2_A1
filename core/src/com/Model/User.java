@@ -1,5 +1,7 @@
 package com.Model;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.util.*;
 
@@ -19,31 +21,12 @@ public class User implements Serializable {
     static {
         File directory = new File("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/");
         for (File userFile : Objects.requireNonNull(directory.listFiles(File::isFile))) {
-            FileInputStream fis;
-            try {
-                fis = new FileInputStream("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/" + userFile.getName());
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            ObjectInputStream ois;
-            try {
-                ois = new ObjectInputStream(fis);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             User user;
+            Gson gson = new Gson();
             try {
-                user = (User) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                ois.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                fis.close();
+                FileReader reader = new FileReader(userFile);
+                user = gson.fromJson(reader, User.class);
+                reader.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -141,30 +124,12 @@ public class User implements Serializable {
     }
 
     public void save() {
-        FileOutputStream fos;
+        File file = new File("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/" + this.username + ".json");
+        Gson gson = new Gson();
         try {
-            fos = new FileOutputStream("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/" + this.username + ".json");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ObjectOutputStream oos;
-        try {
-            oos = new ObjectOutputStream(fos);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            oos.writeObject(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            oos.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            fos.close();
+            FileWriter writer = new FileWriter(file);
+            gson.toJson(this, writer);
+            writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -244,6 +209,7 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public void deleteUser() {
         File file = new File("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/" + this.username + ".json");
         file.delete();

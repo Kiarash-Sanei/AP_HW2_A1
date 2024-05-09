@@ -1,6 +1,7 @@
 package com.View;
 
 import com.AtomicBomber;
+import com.Model.GameObjects.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,6 +21,7 @@ public class GameMenuScreen extends MenuScreen {
     public final ArrayList<Trench> trenches;
     public final ArrayList<Truck> trucks;
     public final ArrayList<Mig> migs;
+    public final ArrayList<Building> buildings;
     private final SpriteBatch batch;
 
     public GameMenuScreen(AtomicBomber atomicBomber) {
@@ -38,12 +40,12 @@ public class GameMenuScreen extends MenuScreen {
         Random random = new Random();
         int x = random.nextInt((int) (graphics.getWidth() - width));
         trees.add(new Tree(x, 0, width, height));
-        height = 50;
+        height = 70;
         width = height * 640 / 832;
         trenches = new ArrayList<>();
         x = random.nextInt((int) (graphics.getWidth() - width));
         trenches.add(new Trench(x, 0, width, height));
-        height = 70;
+        height = 50;
         width = height * 983 / 352;
         trucks = new ArrayList<>();
         x = random.nextInt((int) (graphics.getWidth() - width));
@@ -52,7 +54,13 @@ public class GameMenuScreen extends MenuScreen {
         width = height * 1225 / 275;
         migs = new ArrayList<>();
         x = random.nextInt((int) (graphics.getWidth() - width));
+        int y = random.nextInt((int) (graphics.getHeight() - height));
         migs.add(new Mig(x, 0, width, height, user.getSetting()));
+        height = 100;
+        width = height * 849 / 2187;
+        buildings = new ArrayList<>();
+        x = random.nextInt((int) (graphics.getWidth() - width));
+        buildings.add(new Building(x, 0, width, height));
         stage.addListener(new ClickListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -86,12 +94,14 @@ public class GameMenuScreen extends MenuScreen {
             tank.update(delta);
         for (Tree tree : trees)
             tree.update(delta);
-        /*for (Trench trench : trenches)
+        for (Trench trench : trenches)
             trench.update(delta);
         for (Truck truck : trucks)
             truck.update(delta);
         for (Mig mig : migs)
             mig.update(delta);
+        for (Building building : buildings)
+            building.update(delta);
         batch.begin();
         plane.draw(batch);
         for (Tank tank : tanks)
@@ -104,11 +114,13 @@ public class GameMenuScreen extends MenuScreen {
             truck.draw(batch);
         for (Mig mig : migs)
             mig.draw(batch);
+        for (Building building : buildings)
+            building.draw(batch);
         batch.end();
         tanks.removeIf(tank -> !tank.isAlive());
         trees.removeIf(tree -> !tree.isAlive());
         trenches.removeIf(trench -> !trench.isAlive());
         trucks.removeIf(truck -> !truck.isAlive());
-        migs.removeIf(mig -> !mig.isAlive());*/
+        migs.removeIf(mig -> !mig.isAlive());
     }
 }

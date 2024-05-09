@@ -1,5 +1,8 @@
-package com.Model;
+package com.Model.GameObjects;
 
+import com.Model.GameObject;
+import com.Model.Keyboard;
+import com.Model.Setting;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
