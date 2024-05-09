@@ -2,8 +2,11 @@ package com.View;
 
 import com.AtomicBomber;
 import com.Model.GameObjects.*;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.Model.*;
@@ -26,6 +29,7 @@ public class GameMenuScreen extends MenuScreen {
 
     public GameMenuScreen(AtomicBomber atomicBomber) {
         super(atomicBomber);
+        assetLoader();
         user = User.getCurrentUser();
         float height = 40;
         float width = height * 1236 / 350;
@@ -52,7 +56,7 @@ public class GameMenuScreen extends MenuScreen {
         height = 40;
         width = height * 1225 / 275;
         migs = new ArrayList<>();
-        x = random.nextInt((int) (height * 5),(int) (graphics.getHeight() - height));
+        x = random.nextInt((int) (height * 5), (int) (graphics.getHeight() - height));
         migs.add(new Mig(0, x, width, height, user.getSetting()));
         height = 150;
         width = height * 849 / 2187;
@@ -71,11 +75,18 @@ public class GameMenuScreen extends MenuScreen {
             }
         });
         batch = new SpriteBatch();
+        stage.addActor(MenuScreen.background);
     }
 
     @Override
     public void assetLoader() {
-
+        settingUpdater();
+        if (isBlackAndWhite)
+            MenuScreen.background = new Image(new Texture("Background/B&W/Sky.png"));
+        else
+            MenuScreen.background = new Image(new Texture("Background/Colored/Sky.png"));
+        MenuScreen.background.setHeight(graphics.getHeight());
+        MenuScreen.background.setWidth(graphics.getWidth());
     }
 
     @Override
@@ -85,7 +96,7 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0.196f, 0.663f, 0.769f, 1);
+        ScreenUtils.clear(1, 1, 1, 1);
         super.render(delta);
         plane.update(delta);
         for (Tank tank : tanks)

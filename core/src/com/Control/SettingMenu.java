@@ -1,5 +1,6 @@
 package com.Control;
 
+import com.Model.Difficulty;
 import com.Model.Setting;
 import com.Model.User;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,6 +14,11 @@ public class SettingMenu extends Menu {
 
     public static void changeColorMode() {
         setting.setBlackAndWhite(!setting.getBlackAndWhite());
+        settingMenu();
+    }
+
+    public static void changeDifficulty(Difficulty difficulty) {
+        setting.setDifficulty(difficulty);
         settingMenu();
     }
 

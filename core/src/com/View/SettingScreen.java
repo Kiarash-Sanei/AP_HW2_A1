@@ -1,13 +1,14 @@
 package com.View;
 
 import com.AtomicBomber;
+import com.Model.Difficulty;
+import com.Model.User;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.Control.SettingMenu;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -21,6 +22,20 @@ public class SettingScreen extends MenuScreen {
         CheckBox blackAndWhite = new CheckBox("Black And White", MenuScreen.checkBox);
         if (isBlackAndWhite)
             blackAndWhite.setChecked(true);
+        CheckBox easy = new CheckBox("Easy", MenuScreen.checkBox);
+        CheckBox medium = new CheckBox("Medium", MenuScreen.checkBox);
+        CheckBox hard = new CheckBox("Hard", MenuScreen.checkBox);
+        switch (User.getCurrentUser().getSetting().getDifficulty()) {
+            case easy:
+                easy.setChecked(true);
+                break;
+            case medium:
+                medium.setChecked(true);
+                break;
+            case hard:
+                hard.setChecked(true);
+                break;
+        }
         Label up = new Label("Up: W/Up Arrow\t", MenuScreen.text);
         TextField upTextField = new TextField("", MenuScreen.textField);
         Label down = new Label("Down: S/Down Arrow\t", MenuScreen.text);
@@ -40,6 +55,7 @@ public class SettingScreen extends MenuScreen {
         TextButton mainMenu = new TextButton("Main Menu", MenuScreen.button);
         TextButton exit = new TextButton("Exit", MenuScreen.button);
         Table mainTable = new Table();
+        Table difficultyTable = new Table();
         Table upTable = new Table();
         Table downTable = new Table();
         Table rightTable = new Table();
@@ -58,6 +74,24 @@ public class SettingScreen extends MenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SettingMenu.changeColorMode();
+            }
+        });
+        easy.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SettingMenu.changeDifficulty(Difficulty.easy);
+            }
+        });
+        medium.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SettingMenu.changeDifficulty(Difficulty.medium);
+            }
+        });
+        hard.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SettingMenu.changeDifficulty(Difficulty.hard);
             }
         });
         upTextField.addListener(new ClickListener() {
@@ -132,6 +166,11 @@ public class SettingScreen extends MenuScreen {
         mainTable.add(mute);
         mainTable.row();
         mainTable.add(blackAndWhite);
+        mainTable.row();
+        difficultyTable.add(easy);
+        difficultyTable.add(medium);
+        difficultyTable.add(hard);
+        mainTable.add(difficultyTable);
         mainTable.row();
         upTable.add(up);
         upTable.add(upTextField);

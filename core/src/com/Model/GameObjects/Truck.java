@@ -10,7 +10,7 @@ import static com.badlogic.gdx.Gdx.graphics;
 
 public class Truck extends GameObject {
     private boolean isAlive;
-    private final float speed = 10;
+    private float speed = 10;
 
     public Truck(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -31,8 +31,10 @@ public class Truck extends GameObject {
     }
 
     public void wrapper() {
-        if (x > graphics.getWidth())
-            isAlive = false;
+        if (x > graphics.getWidth() - width)
+            speed = -speed;
+        else if (x < 0)
+            speed = -speed;
     }
 
     public void draw(SpriteBatch batch) {

@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class Tank extends GameObject {
-    private final float speed;
+    private float speed;
     private final float radius;
     private boolean isAlive = true;
 
@@ -49,8 +49,10 @@ public class Tank extends GameObject {
     }
 
     public void wrapper() {
-        if (x > graphics.getWidth())
-            isAlive = false;
+        if (x > graphics.getWidth() - width)
+            speed = -speed;
+        else if (x < 0)
+            speed = -speed;
     }
 
     public void draw(SpriteBatch batch) {

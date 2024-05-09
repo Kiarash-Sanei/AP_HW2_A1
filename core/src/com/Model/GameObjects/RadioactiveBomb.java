@@ -6,25 +6,30 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class Building extends GameObject {
-
-
+public class RadioactiveBomb extends GameObject {
+    private static final float speed = 100;
     private boolean isAlive;
 
-    public Building(float x, float y, float width, float height) {
+    public RadioactiveBomb(float x, float y, float width, float height) {
         super(x, y, width, height);
-        this.isAlive = true;
         if (User.getCurrentUser().getSetting().getBlackAndWhite())
-            this.image = new Image(new Texture("GameObjects/B&W/Building.png"));
+            this.image = new Image(new Texture("GameObjects/B&W/RadioactiveBomb.png"));
         else
-            this.image = new Image(new Texture("GameObjects/Colored/Building.png"));
+            this.image = new Image(new Texture("GameObjects/Colored/RadioactiveBomb.png"));
         image.setHeight(height);
         image.setWidth(width);
-        image.setPosition(x, y);
+        this.isAlive = true;
     }
 
     public void update(float deltaTime) {
+        y -= speed * deltaTime;
+        wrapper();
+        image.setPosition(x, y);
+    }
 
+    public void wrapper() {
+        if (y < 0)
+            isAlive = false;
     }
 
     public void draw(SpriteBatch batch) {
@@ -36,6 +41,6 @@ public class Building extends GameObject {
     }
     @Override
     public String toString() {
-        return "Building";
+        return "RadioactiveBomb";
     }
 }

@@ -93,6 +93,7 @@ public class AvatarMenuScreen extends MenuScreen {
             assetManager.load("DefaultAvatars/4.png", Texture.class);
             assetManager.load("TextField/B&W/TextField.json", Skin.class);
             assetManager.load("Button/B&W/Button.json", Skin.class);
+            assetManager.load("Username/B&W/UsernameTextField.json", Skin.class);
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/B&W/Text.json");
             MenuScreen.button = assetManager.get("Button/B&W/Button.json");
@@ -108,6 +109,7 @@ public class AvatarMenuScreen extends MenuScreen {
             assetManager.load("DefaultAvatars/4.png", Texture.class);
             assetManager.load("TextField/Colored/TextField.json", Skin.class);
             assetManager.load("Button/Colored/Button.json", Skin.class);
+            assetManager.load("Username/Colored/UsernameTextField.json", Skin.class);
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/Colored/Text.json");
             MenuScreen.button = assetManager.get("Button/Colored/Button.json");
