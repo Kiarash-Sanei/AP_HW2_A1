@@ -2,8 +2,11 @@ package com.View;
 
 import com.AtomicBomber;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.Model.User;
 
@@ -21,6 +24,7 @@ public abstract class MenuScreen implements Screen {
     protected static Skin username;
     protected static Skin password;
     protected static Skin checkBox;
+    protected static Image background;
 
     public MenuScreen(AtomicBomber atomicBomber) {
         this.atomicBomber = atomicBomber;

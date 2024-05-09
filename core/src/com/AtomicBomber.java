@@ -1,6 +1,7 @@
 package com;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.View.LoginMenuScreen;
 import com.View.MenuScreen;
@@ -9,11 +10,13 @@ public class AtomicBomber extends Game {
     private int width, height;
     private MenuScreen menuScreen;
     private static AtomicBomber atomicBomber;
+    private SpriteBatch batch;
 
     @Override
     public void create() {
         atomicBomber = this;
         menuScreen = new LoginMenuScreen(this);
+        batch = new SpriteBatch();
         setScreen(menuScreen);
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();

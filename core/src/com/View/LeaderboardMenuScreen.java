@@ -3,13 +3,12 @@ package com.View;
 import com.AtomicBomber;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.Control.LeaderboardMenu;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -85,6 +84,7 @@ public class LeaderboardMenuScreen extends MenuScreen {
         mainTable.add(mainMenu);
         mainTable.row();
         mainTable.add(exit);
+        stage.addActor(MenuScreen.background);
         stage.addActor(mainTable);
     }
 
@@ -98,6 +98,9 @@ public class LeaderboardMenuScreen extends MenuScreen {
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/B&W/Text.json");
             MenuScreen.button = assetManager.get("Button/B&W/Button.json");
+            MenuScreen.background = new Image(new Texture("Background/B&W/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
 
         } else {
             assetManager.load("Text/Colored/Text.json", Skin.class);
@@ -105,6 +108,9 @@ public class LeaderboardMenuScreen extends MenuScreen {
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/Colored/Text.json");
             MenuScreen.button = assetManager.get("Button/Colored/Button.json");
+            MenuScreen.background = new Image(new Texture("Background/Colored/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
         }
     }
 

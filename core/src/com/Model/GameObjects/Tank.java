@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import static com.badlogic.gdx.Gdx.graphics;
+
 public class Tank extends GameObject {
     private final float speed;
     private final float radius;
@@ -31,20 +33,23 @@ public class Tank extends GameObject {
                 radius = 0;
                 break;
         }
-        this.image = new Image(new Texture("GameObjects/Tank.png"));
+        if (setting.getBlackAndWhite())
+            this.image = new Image(new Texture("GameObjects/B&W/Tank.png"));
+        else
+            this.image = new Image(new Texture("GameObjects/Colored/Tank.png"));
         image.setHeight(height);
         image.setWidth(width);
         image.setPosition(x, y);
     }
 
     public void update(float deltaTime) {
-        x -= speed * deltaTime;
+        x += speed * deltaTime;
         image.setPosition(x, y);
         wrapper();
     }
 
     public void wrapper() {
-        if (x < 0)
+        if (x > graphics.getWidth())
             isAlive = false;
     }
 

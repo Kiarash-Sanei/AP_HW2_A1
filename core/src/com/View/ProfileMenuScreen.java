@@ -2,10 +2,12 @@ package com.View;
 
 import com.AtomicBomber;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.Control.ProfileMenu;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -96,6 +98,7 @@ public class ProfileMenuScreen extends MenuScreen {
         mainTable.add(mainMenu);
         mainTable.row();
         mainTable.add(exit);
+        stage.addActor(MenuScreen.background);
         stage.addActor(mainTable);
     }
 
@@ -121,6 +124,9 @@ public class ProfileMenuScreen extends MenuScreen {
             MenuScreen.button = assetManager.get("Button/B&W/Button.json");
             MenuScreen.username = assetManager.get("Username/B&W/UsernameTextField.json");
             MenuScreen.password = assetManager.get("Password/B&W/PasswordTextField.json");
+            MenuScreen.background = new Image(new Texture("Background/B&W/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
 
         } else {
             assetManager.load("Text/Colored/Text.json", Skin.class);
@@ -132,6 +138,9 @@ public class ProfileMenuScreen extends MenuScreen {
             MenuScreen.button = assetManager.get("Button/Colored/Button.json");
             MenuScreen.username = assetManager.get("Username/Colored/UsernameTextField.json");
             MenuScreen.password = assetManager.get("Password/Colored/PasswordTextField.json");
+            MenuScreen.background = new Image(new Texture("Background/Colored/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
         }
     }
 

@@ -2,6 +2,7 @@ package com.Model.GameObjects;
 
 import com.Model.GameObject;
 import com.Model.Setting;
+import com.Model.User;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -32,13 +33,17 @@ public class Mig extends GameObject {
                 radius = 0;
                 break;
         }
-        this.image = new Image(new Texture("GameObjects/Mig.png"));
+        if (setting.getBlackAndWhite())
+            this.image = new Image(new Texture("GameObjects/B&W/Mig.png"));
+        else
+            this.image = new Image(new Texture("GameObjects/Colored/Mig.png"));
         image.setHeight(height);
         image.setWidth(width);
         image.setPosition(x, y);
     }
+
     public void update(float deltaTime) {
-        x -= speed * deltaTime;
+        x += speed * deltaTime;
         image.setPosition(x, y);
         wrapper();
     }

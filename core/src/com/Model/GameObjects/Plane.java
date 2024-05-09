@@ -16,7 +16,10 @@ public class Plane extends GameObject {
     public Plane(float x, float y, float width, float height, Setting setting) {
         super(x, y, width, height);
         this.setting = setting;
-        this.image = new Image(new Texture("GameObjects/Plane.png"));
+        if (setting.getBlackAndWhite())
+            this.image = new Image(new Texture("GameObjects/B&W/Plane.png"));
+        else
+            this.image = new Image(new Texture("GameObjects/Colored/Plane.png"));
         image.setHeight(height);
         image.setWidth(width);
         image.setPosition(x, y);
@@ -96,16 +99,14 @@ public class Plane extends GameObject {
     }
 
     public void update(float deltaTime) {
-        if (Keyboard.status.get(Keyboard.UP)) {
+        if (Keyboard.status.get(Keyboard.UP))
             y += speed * deltaTime;
-        } else if (Keyboard.status.get(Keyboard.DOWN)) {
+        else if (Keyboard.status.get(Keyboard.DOWN))
             y -= speed * deltaTime;
-        }
-        if (Keyboard.status.get(Keyboard.RIGHT)) {
+        if (Keyboard.status.get(Keyboard.RIGHT))
             x += speed * deltaTime;
-        } else if (Keyboard.status.get(Keyboard.LEFT)) {
+        else if (Keyboard.status.get(Keyboard.LEFT))
             x -= speed * deltaTime;
-        }
         wrapper();
         image.setPosition(x, y);
     }

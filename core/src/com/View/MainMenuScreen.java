@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.Control.MainMenu;
 import com.Model.User;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -87,6 +88,7 @@ public class MainMenuScreen extends MenuScreen {
         mainTable.add(loginMenu);
         mainTable.row();
         mainTable.add(exit);
+        stage.addActor(MenuScreen.background);
         stage.addActor(mainTable);
     }
 
@@ -100,13 +102,17 @@ public class MainMenuScreen extends MenuScreen {
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/B&W/Text.json");
             MenuScreen.button = assetManager.get("Button/B&W/Button.json");
-
+            MenuScreen.background = new Image(new Texture("Background/B&W/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
         } else {
             assetManager.load("Text/Colored/Text.json", Skin.class);
             assetManager.load("Button/Colored/Button.json", Skin.class);
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/Colored/Text.json");
-            MenuScreen.button = assetManager.get("Button/Colored/Button.json");
+            MenuScreen.background = new Image(new Texture("Background/Colored/Background.png"));
+            MenuScreen.background.setHeight(graphics.getHeight());
+            MenuScreen.background.setWidth(graphics.getWidth());
         }
     }
 
