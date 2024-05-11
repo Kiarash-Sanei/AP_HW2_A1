@@ -1,25 +1,28 @@
 package com;
 
+import com.View.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.View.LoginMenuScreen;
-import com.View.MenuScreen;
 
 public class AtomicBomber extends Game {
     private int width, height;
-    private MenuScreen menuScreen;
+    private static MenuScreen menuScreen;
     private static AtomicBomber atomicBomber;
-    private SpriteBatch batch;
+    private static Music music;
 
     @Override
     public void create() {
         atomicBomber = this;
         menuScreen = new LoginMenuScreen(this);
-        batch = new SpriteBatch();
         setScreen(menuScreen);
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
+        music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GeneralMusic.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 
     @Override
@@ -29,8 +32,10 @@ public class AtomicBomber extends Game {
     }
 
     public static void changeScreen(MenuScreen menuScreen) {
+        setMusic(AtomicBomber.menuScreen, menuScreen);
         atomicBomber.setScreen(menuScreen);
     }
+
     public static AtomicBomber getAtomicBomber() {
         return atomicBomber;
     }
@@ -41,5 +46,31 @@ public class AtomicBomber extends Game {
 
     public int getHeight() {
         return height;
+    }
+
+    private static void setMusic(MenuScreen oldMenuScreen, MenuScreen newMenuScreen) {
+        if ((newMenuScreen.getClass() == AvatarMenuScreen.class ||
+                newMenuScreen.getClass() == LeaderboardMenuScreen.class ||
+                newMenuScreen.getClass() == LoginMenuScreen.class ||
+                newMenuScreen.getClass() == MainMenuScreen.class ||
+                newMenuScreen.getClass() == ProfileMenuScreen.class ||
+                newMenuScreen.getClass() == SettingScreen.class) &&
+                (oldMenuScreen.getClass() == GameMenuScreen.class)) {
+            music.stop();
+            music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GeneralMusic.mp3"));
+        }
+        else if ((oldMenuScreen.getClass() == AvatarMenuScreen.class ||
+                oldMenuScreen.getClass() == LeaderboardMenuScreen.class ||
+                oldMenuScreen.getClass() == LoginMenuScreen.class ||
+                oldMenuScreen.getClass() == MainMenuScreen.class ||
+                oldMenuScreen.getClass() == ProfileMenuScreen.class ||
+                oldMenuScreen.getClass() == SettingScreen.class) &&
+                (newMenuScreen.getClass() == GameMenuScreen.class)) {
+            music.stop();
+            music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GameMusic.mp3"));
+        }
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 }
