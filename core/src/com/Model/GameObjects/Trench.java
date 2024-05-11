@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Trench extends GameObject {
-    private boolean isAlive;
+    private static final float height = 30;
+    private static final float width = height * 1484 / 674;
 
-    public Trench(float x, float y, float width, float height) {
-        super(x, y, width, height);
-        this.isAlive = true;
+    public Trench(float x, float y) {
+        super(x, y);
         if (User.getCurrentUser().getSetting().getBlackAndWhite())
             this.image = new Image(new Texture("GameObjects/B&W/Trench.png"));
         else
@@ -29,10 +29,19 @@ public class Trench extends GameObject {
         image.draw(batch, 1);
     }
 
-    public boolean isAlive() {
-        return isAlive;
+    public static float getHeight() {
+        return height;
     }
-    public void setAlive(boolean life) {
-        isAlive = life;
+
+    public static float getWidth() {
+        return width;
+    }
+
+    @Override
+    public boolean isOn(GameObject gameObject) {
+        return gameObject.getY() <= this.y + height &&
+                gameObject.getY() >= this.y &&
+                gameObject.getX() >= this.x &&
+                gameObject.getX() <= this.x + width;
     }
 }

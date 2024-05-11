@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class Plane extends GameObject {
-    private boolean isAlive = true;
     private final Setting setting;
     private final float speed = 300;
     private final float minimumTime = 0.1f;
@@ -20,11 +19,15 @@ public class Plane extends GameObject {
     private float regularBombTime = minimumTime;
     private final ArrayList<ClusterBomb> clusterBombs;
     private float clusterBombTime = minimumTime;
+    private int clusterBombCount = 0;
     private final ArrayList<RadioactiveBomb> radioactiveBombs;
     private float radioactiveBombTime = minimumTime;
+    private int radioactiveBombCount = 0;
+    private static final float height = 40;
+    private static final float width = height * 1236 / 350;
 
-    public Plane(float x, float y, float width, float height, Setting setting) {
-        super(x, y, width, height);
+    public Plane(float x, float y, Setting setting) {
+        super(x ,y);
         this.setting = setting;
         if (setting.getBlackAndWhite())
             this.image = new Image(new Texture("GameObjects/B&W/Plane.png"));
@@ -43,25 +46,21 @@ public class Plane extends GameObject {
 
     public void regularBomb() {
         if (regularBombs.size() < 3) {
-            float height = 20;
-            float width = height * 958 / 3148;
-            this.regularBombs.add(new RegularBomb(x, y, width, height));
+            this.regularBombs.add(new RegularBomb(x, y));
         }
     }
 
     public void radioactiveBomb() {
-        if (radioactiveBombs.size() < 3) {
-            float height = 20;
-            float width = height * 694 / 1952;
-            this.radioactiveBombs.add(new RadioactiveBomb(x, y, width, height));
+        if (radioactiveBombCount > 0) {
+            this.radioactiveBombCount -= 1;
+            this.radioactiveBombs.add(new RadioactiveBomb(x, y));
         }
     }
 
     public void clusterBomb() {
-        if (clusterBombs.size() < 3) {
-            float height = 20;
-            float width = height * 1979 / 5524;
-            this.clusterBombs.add(new ClusterBomb(x, y, width, height));
+        if (clusterBombCount > 0) {
+            this.clusterBombCount -= 1;
+            this.clusterBombs.add(new ClusterBomb(x, y));
         }
     }
 
@@ -173,8 +172,32 @@ public class Plane extends GameObject {
     }
 
     public void removeIf() {
-        regularBombs.removeIf(regularBomb -> !regularBomb.isAlive());
-        clusterBombs.removeIf(clusterBomb -> !clusterBomb.isAlive());
-        radioactiveBombs.removeIf(radioactiveBomb -> !radioactiveBomb.isAlive());
+        regularBombs.removeIf(regularBomb -> !regularBomb.getIsAlive());
+        clusterBombs.removeIf(clusterBomb -> !clusterBomb.getIsAlive());
+        radioactiveBombs.removeIf(radioactiveBomb -> !radioactiveBomb.getIsAlive());
+    }
+
+    public void radioactiveBombChange() {
+        this.radioactiveBombCount++;
+    }
+
+    public void clusterBombChange() {
+        this.clusterBombCount++;
+    }
+
+    public static float getHeight() {
+        return height;
+    }
+
+    public static float getWidth() {
+        return width;
+    }
+
+    @Override
+    public boolean isOn(GameObject gameObject) {
+        return gameObject.getY() <= this.y + height &&
+                gameObject.getY() >= this.y &&
+                gameObject.getX() >= this.x &&
+                gameObject.getX() <= this.x + width;
     }
 }

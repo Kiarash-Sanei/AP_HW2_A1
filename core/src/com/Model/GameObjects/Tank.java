@@ -12,9 +12,11 @@ public class Tank extends GameObject {
     private float speed;
     private final float radius;
     private boolean isAlive = true;
+    private static final float height = 70;
+    private static final float width = height * 1263 / 634;
 
-    public Tank(float x, float y, float width, float height, Setting setting) {
-        super(x, y, width, height);
+    public Tank(float x, float y, Setting setting) {
+        super(x, y);
         switch (setting.getDifficulty()) {
             case easy:
                 speed = 10;
@@ -59,10 +61,19 @@ public class Tank extends GameObject {
         image.draw(batch, 1);
     }
 
-    public boolean isAlive() {
-        return isAlive;
+    public static float getHeight() {
+        return height;
     }
-    public void setAlive(boolean life) {
-        isAlive = life;
+
+    public static float getWidth() {
+        return width;
+    }
+
+    @Override
+    public boolean isOn(GameObject gameObject) {
+        return gameObject.getY() <= this.y + height &&
+                gameObject.getY() >= this.y &&
+                gameObject.getX() >= this.x &&
+                gameObject.getX() <= this.x + width;
     }
 }

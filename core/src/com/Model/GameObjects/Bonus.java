@@ -6,16 +6,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class Tree extends GameObject {
-    private static final float height = 70;
-    private static final float width = height * 573 / 640;
+public class Bonus extends GameObject {
+    private static final float height = 40;
+    private static final float width = height * 535 / 548;
 
-    public Tree(float x, float y) {
+    public Bonus(float x, float y) {
         super(x, y);
         if (User.getCurrentUser().getSetting().getBlackAndWhite())
-            this.image = new Image(new Texture("GameObjects/B&W/Tree.png"));
+            this.image = new Image(new Texture("Bonus/B&W/Bonus.png"));
         else
-            this.image = new Image(new Texture("GameObjects/Colored/Tree.png"));
+            this.image = new Image(new Texture("Bonus/Colored/Bonus.png"));
         image.setHeight(height);
         image.setWidth(width);
         image.setPosition(x, y);

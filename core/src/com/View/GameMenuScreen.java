@@ -1,6 +1,7 @@
 package com.View;
 
 import com.AtomicBomber;
+import com.Control.GameMenu;
 import com.Model.GameObjects.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,44 +25,32 @@ public class GameMenuScreen extends MenuScreen {
     public final ArrayList<Truck> trucks;
     public final ArrayList<Mig> migs;
     public final ArrayList<Building> buildings;
+    public final ArrayList<Bonus> bonuses;
     private final SpriteBatch batch;
 
     public GameMenuScreen(AtomicBomber atomicBomber) {
         super(atomicBomber);
         assetLoader();
         user = User.getCurrentUser();
-        float height = 40;
-        float width = height * 1236 / 350;
-        plane = new Plane((float) graphics.getWidth() / 2 + width, (float) graphics.getHeight() / 2 + height, width, height, user.getSetting());
-        height = 70;
-        width = height * 1263 / 634;
+        plane = new Plane((float) (graphics.getWidth() + Plane.getWidth()) / 2, (float) (graphics.getHeight() + Plane.getHeight()) / 2, user.getSetting());
         tanks = new ArrayList<>();
-        tanks.add(new Tank(0, 0, width, height, user.getSetting()));
-        height = 70;
-        width = height * 573 / 640;
+        tanks.add(new Tank(0, 0, user.getSetting()));
         trees = new ArrayList<>();
         Random random = new Random();
-        int x = random.nextInt((int) (graphics.getWidth() - width));
-        trees.add(new Tree(x, 0, width, height));
-        height = 30;
-        width = height * 1484 / 674;
+        int x = random.nextInt((int) (graphics.getWidth() - Tree.getWidth()));
+        trees.add(new Tree(x, 0));
         trenches = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - width));
-        trenches.add(new Trench(x, 0, width, height));
-        height = 50;
-        width = height * 983 / 352;
+        x = random.nextInt((int) (graphics.getWidth() - Tree.getWidth()));
+        trenches.add(new Trench(x, 0));
         trucks = new ArrayList<>();
-        trucks.add(new Truck(0, 0, width, height));
-        height = 40;
-        width = height * 1225 / 275;
+        trucks.add(new Truck(0, 0));
         migs = new ArrayList<>();
-        x = random.nextInt((int) (height * 5), (int) (graphics.getHeight() - height));
-        migs.add(new Mig(0, x, width, height, user.getSetting()));
-        height = 150;
-        width = height * 849 / 2187;
+        x = random.nextInt((int) (Mig.getHeight() * 5), (int) (graphics.getHeight() - Mig.getHeight()));
+        migs.add(new Mig(0, x, user.getSetting()));
         buildings = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - width));
-        buildings.add(new Building(x, 0, width, height));
+        x = random.nextInt((int) (graphics.getWidth() - Mig.getWidth()));
+        buildings.add(new Building(x, 0));
+        bonuses = new ArrayList<>();
         stage.addListener(new ClickListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -95,7 +84,13 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
-        GameObject.collision();
+        GameObject[] collied = GameMenu.collision();
+        if (collied != null) {
+            if (collied[0].getClass() == Building.class) {
+                bonuses.add(new Bonus(collied[0].getX() + Building.getWidth() / 2 - Bonus.getWidth() / 2,
+                        collied[0].getY() + Building.getHeight() + 100));
+            }
+        }
         ScreenUtils.clear(1, 1, 1, 1);
         super.render(delta);
         plane.update(delta);
@@ -111,6 +106,8 @@ public class GameMenuScreen extends MenuScreen {
             mig.update(delta);
         for (Building building : buildings)
             building.update(delta);
+        for (Bonus bonus : bonuses)
+            bonus.update(delta);
         batch.begin();
         plane.draw(batch);
         for (Tank tank : tanks)
@@ -125,13 +122,16 @@ public class GameMenuScreen extends MenuScreen {
             mig.draw(batch);
         for (Building building : buildings)
             building.draw(batch);
+        for (Bonus bonus : bonuses)
+            bonus.draw(batch);
         batch.end();
         plane.removeIf();
-        tanks.removeIf(tank -> !tank.isAlive());
-        trees.removeIf(tree -> !tree.isAlive());
-        trenches.removeIf(trench -> !trench.isAlive());
-        trucks.removeIf(truck -> !truck.isAlive());
-        migs.removeIf(mig -> !mig.isAlive());
-        buildings.removeIf(building -> !building.isAlive());
+        tanks.removeIf(tank -> !tank.getIsAlive());
+        trees.removeIf(tree -> !tree.getIsAlive());
+        trenches.removeIf(trench -> !trench.getIsAlive());
+        trucks.removeIf(truck -> !truck.getIsAlive());
+        migs.removeIf(mig -> !mig.getIsAlive());
+        buildings.removeIf(building -> !building.getIsAlive());
+        bonuses.removeIf(bonus -> !bonus.getIsAlive());
     }
 }
