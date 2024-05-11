@@ -1,6 +1,5 @@
 package com.Model.GameObjects;
 
-import com.Model.GameObject;
 import com.Model.Setting;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,9 +10,6 @@ import static com.badlogic.gdx.Gdx.graphics;
 public class Tank extends GameObject {
     private float speed;
     private final float radius;
-    private boolean isAlive = true;
-    private static final float height = 70;
-    private static final float width = height * 1263 / 634;
 
     public Tank(float x, float y, Setting setting) {
         super(x, y);
@@ -39,8 +35,8 @@ public class Tank extends GameObject {
             this.image = new Image(new Texture("GameObjects/B&W/Tank.png"));
         else
             this.image = new Image(new Texture("GameObjects/Colored/Tank.png"));
-        image.setHeight(height);
-        image.setWidth(width);
+        image.setHeight(GameObjects.Tank.getHeight());
+        image.setWidth(GameObjects.Tank.getWidth());
         image.setPosition(x, y);
     }
 
@@ -51,7 +47,7 @@ public class Tank extends GameObject {
     }
 
     public void wrapper() {
-        if (x > graphics.getWidth() - width)
+        if (x > graphics.getWidth() - GameObjects.Tank.getWidth())
             speed = -speed;
         else if (x < 0)
             speed = -speed;
@@ -59,21 +55,5 @@ public class Tank extends GameObject {
 
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);
-    }
-
-    public static float getHeight() {
-        return height;
-    }
-
-    public static float getWidth() {
-        return width;
-    }
-
-    @Override
-    public boolean isOn(GameObject gameObject) {
-        return gameObject.getY() <= this.y + height &&
-                gameObject.getY() >= this.y &&
-                gameObject.getX() >= this.x &&
-                gameObject.getX() <= this.x + width;
     }
 }

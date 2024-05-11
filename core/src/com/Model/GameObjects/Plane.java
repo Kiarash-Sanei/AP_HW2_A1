@@ -1,6 +1,5 @@
 package com.Model.GameObjects;
 
-import com.Model.GameObject;
 import com.Model.Keyboard;
 import com.Model.Setting;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,7 +12,7 @@ import static com.badlogic.gdx.Gdx.graphics;
 
 public class Plane extends GameObject {
     private final Setting setting;
-    private final float speed = 300;
+    private final float acceleration = 50;
     private final float minimumTime = 0.1f;
     private final ArrayList<RegularBomb> regularBombs;
     private float regularBombTime = minimumTime;
@@ -23,44 +22,46 @@ public class Plane extends GameObject {
     private final ArrayList<RadioactiveBomb> radioactiveBombs;
     private float radioactiveBombTime = minimumTime;
     private int radioactiveBombCount = 0;
-    private static final float height = 40;
-    private static final float width = height * 1236 / 350;
 
     public Plane(float x, float y, Setting setting) {
-        super(x ,y);
+        super(x, y);
         this.setting = setting;
         if (setting.getBlackAndWhite())
-            this.image = new Image(new Texture("GameObjects/B&W/Plane.png"));
+            image = new Image(new Texture("GameObjects/B&W/Plane.png"));
         else
-            this.image = new Image(new Texture("GameObjects/Colored/Plane.png"));
-        image.setHeight(height);
-        image.setWidth(width);
+            image = new Image(new Texture("GameObjects/Colored/Plane.png"));
+        image.setHeight(GameObjects.Plane.getHeight());
+        image.setWidth(GameObjects.Plane.getWidth());
         image.setPosition(x, y);
         for (Keyboard key : Keyboard.values()) {
             Keyboard.status.put(key, false);
         }
-        this.regularBombs = new ArrayList<>();
-        this.clusterBombs = new ArrayList<>();
-        this.radioactiveBombs = new ArrayList<>();
+        regularBombs = new ArrayList<>();
+        clusterBombs = new ArrayList<>();
+        radioactiveBombs = new ArrayList<>();
+        accelerationX = acceleration;
+        velocityX = 0;
+        accelerationY = acceleration;
+        velocityY = 0;
     }
 
     public void regularBomb() {
         if (regularBombs.size() < 3) {
-            this.regularBombs.add(new RegularBomb(x, y));
+            this.regularBombs.add(new RegularBomb(this));
         }
     }
 
     public void radioactiveBomb() {
         if (radioactiveBombCount > 0) {
             this.radioactiveBombCount -= 1;
-            this.radioactiveBombs.add(new RadioactiveBomb(x, y));
+            this.radioactiveBombs.add(new RadioactiveBomb(this));
         }
     }
 
     public void clusterBomb() {
         if (clusterBombCount > 0) {
             this.clusterBombCount -= 1;
-            this.clusterBombs.add(new ClusterBomb(x, y));
+            this.clusterBombs.add(new ClusterBomb(this));
         }
     }
 
@@ -108,13 +109,27 @@ public class Plane extends GameObject {
 
     public void update(float deltaTime) {
         if (Keyboard.status.get(Keyboard.UP))
-            y += speed * deltaTime;
+            velocityY += accelerationY * deltaTime;
         else if (Keyboard.status.get(Keyboard.DOWN))
-            y -= speed * deltaTime;
+            velocityY -= accelerationY * deltaTime;
+        else {
+            if (velocityY < 0)
+                velocityY += accelerationY * deltaTime;
+            else if (accelerationY > 0)
+                velocityY -= accelerationY * deltaTime;
+        }
         if (Keyboard.status.get(Keyboard.RIGHT))
-            x += speed * deltaTime;
+            velocityX += accelerationX * deltaTime;
         else if (Keyboard.status.get(Keyboard.LEFT))
-            x -= speed * deltaTime;
+            velocityX -= accelerationX * deltaTime;
+        else {
+            if (velocityX < 0)
+                velocityX += accelerationX * deltaTime;
+            else if (velocityX > 0)
+                velocityX -= accelerationX * deltaTime;
+        }
+        x += velocityX * deltaTime;
+        y += velocityY * deltaTime;
         if (Keyboard.status.get(Keyboard.REGULAR_BOMB)) {
             regularBombTime += deltaTime;
             if (regularBombTime > minimumTime) {
@@ -147,14 +162,17 @@ public class Plane extends GameObject {
     }
 
     public void wrapper() {
-        if (x < -width)
+        if (x < -GameObjects.Plane.getWidth())
             x = graphics.getWidth();
         else if (x > graphics.getWidth())
-            x = -width;
-        if (y < height * 3)
-            y = height * 3;
-        else if (y > graphics.getHeight() - height)
-            y = graphics.getHeight() - height;
+            x = -GameObjects.Plane.getWidth();
+        if (y < GameObjects.Plane.getHeight() * 3) {
+            y = GameObjects.Plane.getHeight() * 3;
+            velocityY = 0;
+        } else if (y > graphics.getHeight() - GameObjects.Plane.getHeight()) {
+            y = graphics.getHeight() - GameObjects.Plane.getHeight();
+            velocityY = 0;
+        }
     }
 
     public void draw(SpriteBatch batch) {
@@ -177,27 +195,11 @@ public class Plane extends GameObject {
         radioactiveBombs.removeIf(radioactiveBomb -> !radioactiveBomb.getIsAlive());
     }
 
-    public void radioactiveBombChange() {
+    public void radioactiveBombIncrease() {
         this.radioactiveBombCount++;
     }
 
-    public void clusterBombChange() {
+    public void clusterBombIncrease() {
         this.clusterBombCount++;
-    }
-
-    public static float getHeight() {
-        return height;
-    }
-
-    public static float getWidth() {
-        return width;
-    }
-
-    @Override
-    public boolean isOn(GameObject gameObject) {
-        return gameObject.getY() <= this.y + height &&
-                gameObject.getY() >= this.y &&
-                gameObject.getX() >= this.x &&
-                gameObject.getX() <= this.x + width;
     }
 }

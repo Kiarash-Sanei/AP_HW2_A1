@@ -1,6 +1,6 @@
 package com.Control;
 
-import com.Model.GameObject;
+import com.Model.GameObjects.GameObject;
 import com.Model.GameObjects.*;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class GameMenu extends Menu {
                             gameObject.isOn(gameObject1)) {
                         gameObject.kill();
                         gameObjects.remove(gameObject);
-                        ((Plane) gameObject1).clusterBombChange();
+                        ((Plane) gameObject1).clusterBombIncrease();
                         return null;
                     }
                 }

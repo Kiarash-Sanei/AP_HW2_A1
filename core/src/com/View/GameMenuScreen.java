@@ -32,23 +32,24 @@ public class GameMenuScreen extends MenuScreen {
         super(atomicBomber);
         assetLoader();
         user = User.getCurrentUser();
-        plane = new Plane((float) (graphics.getWidth() + Plane.getWidth()) / 2, (float) (graphics.getHeight() + Plane.getHeight()) / 2, user.getSetting());
+        plane = new Plane((float) graphics.getWidth() /2 - GameObjects.Plane.getWidth() / 2,
+                (float) graphics.getHeight() /2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
         tanks = new ArrayList<>();
         tanks.add(new Tank(0, 0, user.getSetting()));
         trees = new ArrayList<>();
         Random random = new Random();
-        int x = random.nextInt((int) (graphics.getWidth() - Tree.getWidth()));
+        int x = random.nextInt((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
         trees.add(new Tree(x, 0));
         trenches = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - Tree.getWidth()));
+        x = random.nextInt((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
         trenches.add(new Trench(x, 0));
         trucks = new ArrayList<>();
         trucks.add(new Truck(0, 0));
         migs = new ArrayList<>();
-        x = random.nextInt((int) (Mig.getHeight() * 5), (int) (graphics.getHeight() - Mig.getHeight()));
+        x = random.nextInt((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
         migs.add(new Mig(0, x, user.getSetting()));
         buildings = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - Mig.getWidth()));
+        x = random.nextInt((int) (graphics.getWidth() - GameObjects.Mig.getWidth()));
         buildings.add(new Building(x, 0));
         bonuses = new ArrayList<>();
         stage.addListener(new ClickListener() {
@@ -87,8 +88,8 @@ public class GameMenuScreen extends MenuScreen {
         GameObject[] collied = GameMenu.collision();
         if (collied != null) {
             if (collied[0].getClass() == Building.class) {
-                bonuses.add(new Bonus(collied[0].getX() + Building.getWidth() / 2 - Bonus.getWidth() / 2,
-                        collied[0].getY() + Building.getHeight() + 100));
+                bonuses.add(new Bonus(collied[0].getX() + GameObjects.getWidth(collied[0]) / 2 - GameObjects.Bonus.getWidth() / 2,
+                        collied[0].getY() + GameObjects.Building.getHeight() + 100));
             }
         }
         ScreenUtils.clear(1, 1, 1, 1);

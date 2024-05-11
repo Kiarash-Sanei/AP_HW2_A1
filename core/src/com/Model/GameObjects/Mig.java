@@ -1,8 +1,6 @@
 package com.Model.GameObjects;
 
-import com.Model.GameObject;
 import com.Model.Setting;
-import com.Model.User;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -11,8 +9,6 @@ public class Mig extends GameObject {
     private final float period;
     private final float radius;
     private final float speed = 200;
-    private static final float height = 40;
-    private static final float width = height * 1225 / 275;
 
     public Mig(float x, float y, Setting setting) {
         super(x, y);
@@ -38,8 +34,8 @@ public class Mig extends GameObject {
             this.image = new Image(new Texture("GameObjects/B&W/Mig.png"));
         else
             this.image = new Image(new Texture("GameObjects/Colored/Mig.png"));
-        image.setHeight(height);
-        image.setWidth(width);
+        image.setHeight(GameObjects.Mig.getHeight());
+        image.setWidth(GameObjects.Mig.getWidth());
         image.setPosition(x, y);
     }
 
@@ -56,21 +52,5 @@ public class Mig extends GameObject {
 
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);
-    }
-
-    public static float getHeight() {
-        return height;
-    }
-
-    public static float getWidth() {
-        return width;
-    }
-
-    @Override
-    public boolean isOn(GameObject gameObject) {
-        return gameObject.getY() <= this.y + height &&
-                gameObject.getY() >= this.y &&
-                gameObject.getX() >= this.x &&
-                gameObject.getX() <= this.x + width;
     }
 }

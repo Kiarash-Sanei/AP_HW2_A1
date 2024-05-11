@@ -1,6 +1,5 @@
 package com.Model.GameObjects;
 
-import com.Model.GameObject;
 import com.Model.User;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,8 +9,6 @@ import static com.badlogic.gdx.Gdx.graphics;
 
 public class Truck extends GameObject {
     private float speed = 10;
-    private static final float height = 50;
-    private static final float width = height * 983 / 352;
 
     public Truck(float x, float y) {
         super(x, y);
@@ -19,8 +16,8 @@ public class Truck extends GameObject {
             this.image = new Image(new Texture("GameObjects/B&W/Truck.png"));
         else
             this.image = new Image(new Texture("GameObjects/Colored/Truck.png"));
-        image.setHeight(height);
-        image.setWidth(width);
+        image.setHeight(GameObjects.Truck.getHeight());
+        image.setWidth(GameObjects.Truck.getWidth());
         image.setPosition(x, y);
     }
 
@@ -31,7 +28,7 @@ public class Truck extends GameObject {
     }
 
     public void wrapper() {
-        if (x > graphics.getWidth() - width)
+        if (x > graphics.getWidth() - GameObjects.Truck.getWidth())
             speed = -speed;
         else if (x < 0)
             speed = -speed;
@@ -39,21 +36,5 @@ public class Truck extends GameObject {
 
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);
-    }
-
-    public static float getHeight() {
-        return height;
-    }
-
-    public static float getWidth() {
-        return width;
-    }
-
-    @Override
-    public boolean isOn(GameObject gameObject) {
-        return gameObject.getY() <= this.y + height &&
-                gameObject.getY() >= this.y &&
-                gameObject.getX() >= this.x &&
-                gameObject.getX() <= this.x + width;
     }
 }
