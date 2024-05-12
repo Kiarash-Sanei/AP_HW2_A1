@@ -1,10 +1,12 @@
 package com.Control;
 
+import com.AtomicBomber;
 import com.Model.GameObjects.*;
 import com.Model.Prize;
+import com.Model.Wave;
+import com.View.GameMenuScreen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GameMenu extends Menu {
     public static ArrayList<Float> buildingCollision(ArrayList<Building> buildings, Plane plane) {
@@ -165,5 +167,16 @@ public class GameMenu extends Menu {
                     plane.radioactiveBombIncrease();
             }
         }
+    }
+    public static void changeWave(Wave wave) {
+        if (wave==Wave.first)
+            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(),Wave.second));
+        else if (wave==Wave.second)
+            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(),Wave.third));
+        else
+            gameOver();
+    }
+    public static void gameOver() {
+
     }
 }

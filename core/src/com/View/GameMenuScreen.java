@@ -3,16 +3,18 @@ package com.View;
 import com.AtomicBomber;
 import com.Control.GameMenu;
 import com.Model.GameObjects.*;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.Model.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import static com.badlogic.gdx.Gdx.graphics;
@@ -28,12 +30,37 @@ public class GameMenuScreen extends MenuScreen {
     private final ArrayList<Trench> trenches;
     private final ArrayList<Truck> trucks;
     private final ArrayList<Bonus> bonuses;
+    private static boolean iceMode;
+    private static boolean nextWave;//TODO: change Key handling.
     private final SpriteBatch batch;
+    private final Label waveMessage;
+    private float waveMessageTimer;
+
 
     public GameMenuScreen(AtomicBomber atomicBomber, Wave wave) {
         super(atomicBomber);
-        this.wave = wave;
         assetLoader();
+        switch (wave) {
+            case first:
+                this.waveMessage = new Label("WAVE 1", text);
+                break;
+            case second:
+                this.waveMessage = new Label("WAVE 2", text);
+                break;
+            case third:
+                this.waveMessage = new Label("WAVE 3", text);
+                break;
+            default:
+                this.waveMessage = null;
+        }
+        waveMessageTimer = 0;
+        waveMessage.setFontScale(5);
+        Table waveTable = new Table();
+        waveTable.setBounds(0, 0, graphics.getWidth(), graphics.getHeight());
+        waveTable.add(waveMessage);
+        this.wave = wave;
+        iceMode = false;
+        nextWave = false;
         int x;
         Random random = new Random();
         user = User.getCurrentUser();
@@ -79,15 +106,24 @@ public class GameMenuScreen extends MenuScreen {
         });
         batch = new SpriteBatch();
         stage.addActor(MenuScreen.background);
+        stage.addActor(waveTable);
     }
 
     @Override
     public void assetLoader() {
         settingUpdater();
-        if (isBlackAndWhite)
+        AssetManager assetManager = new AssetManager();
+        if (isBlackAndWhite) {
+            assetManager.load("Text/B&W/Text.json", Skin.class);
+            assetManager.finishLoading();
+            MenuScreen.text = assetManager.get("Text/B&W/Text.json");
             MenuScreen.background = new Image(new Texture("Background/B&W/Sky.png"));
-        else
+        } else {
+            assetManager.load("Text/Colored/Text.json", Skin.class);
+            assetManager.finishLoading();
+            MenuScreen.text = assetManager.get("Text/Colored/Text.json");
             MenuScreen.background = new Image(new Texture("Background/Colored/Sky.png"));
+        }
         MenuScreen.background.setHeight(graphics.getHeight());
         MenuScreen.background.setWidth(graphics.getWidth());
     }
@@ -103,31 +139,24 @@ public class GameMenuScreen extends MenuScreen {
             ArrayList<Float> buildingBonuses = GameMenu.buildingCollision(buildings, plane);
             for (Float x : buildingBonuses)
                 bonuses.add(new Bonus(x, Prize.radioactiveBomb));
-            for (Building building : buildings)
-                building.update(delta);
         }
         if (!trenches.isEmpty()) {
             ArrayList<Float> trenchBonuses = GameMenu.trenchCollision(trenches, plane);
             for (Float x : trenchBonuses)
                 bonuses.add(new Bonus(x, Prize.clusterBomb));
-            for (Trench trench : trenches)
-                trench.update(delta);
         }
         if (!tanks.isEmpty()) {
             GameMenu.tankCollision(tanks, plane);
             for (Tank tank : tanks)
-                tank.update(delta);
+                tank.update(delta, iceMode);
         }
         if (!trucks.isEmpty()) {
             GameMenu.truckCollision(trucks, plane);
             for (Truck truck : trucks)
-                truck.update(delta);
+                truck.update(delta, iceMode);
         }
-        if (!trees.isEmpty()) {
+        if (!trees.isEmpty())
             GameMenu.treeCollision(trees, plane);
-            for (Tree tree : trees)
-                tree.update(delta);
-        }
         if (!migs.isEmpty()) {
             GameMenu.migCollision(migs, plane);
             for (Mig mig : migs)
@@ -150,7 +179,7 @@ public class GameMenuScreen extends MenuScreen {
                 mig.draw(batch);
         if (!tanks.isEmpty())
             for (Tank tank : tanks)
-                tank.draw(batch);
+                tank.draw(batch, iceMode);
         if (!trees.isEmpty())
             for (Tree tree : trees)
                 tree.draw(batch);
@@ -159,7 +188,7 @@ public class GameMenuScreen extends MenuScreen {
                 trench.draw(batch);
         if (!trucks.isEmpty())
             for (Truck truck : trucks)
-                truck.draw(batch);
+                truck.draw(batch, iceMode);
         if (!bonuses.isEmpty())
             for (Bonus bonus : bonuses)
                 bonus.draw(batch);
@@ -172,5 +201,31 @@ public class GameMenuScreen extends MenuScreen {
         migs.removeIf(mig -> !mig.getIsAlive());
         buildings.removeIf(building -> !building.getIsAlive());
         bonuses.removeIf(bonus -> !bonus.getIsAlive());
+        waveMessageTimer += delta;
+        if (waveMessageTimer > 5)
+            waveMessage.setText("");
+        if (this.waveOver()) {
+            GameMenu.changeWave(wave);
+        }
+    }
+
+    private boolean waveOver() {
+        return (buildings.isEmpty() &&
+                migs.isEmpty() &&
+                tanks.isEmpty() &&
+                trees.isEmpty() &&
+                trenches.isEmpty() &&
+                trucks.isEmpty()) || nextWave;
+    }
+
+    public static void setIceMode(boolean iceMode) {
+        GameMenuScreen.iceMode = iceMode;
+    }
+
+    public static boolean getIceMode() {
+        return GameMenuScreen.iceMode;
+    }
+    public static void nextWave() {
+        GameMenuScreen.nextWave = true;
     }
 }

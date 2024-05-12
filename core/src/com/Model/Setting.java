@@ -12,10 +12,13 @@ public class Setting {
     private final ArrayList<Integer> down;
     private final ArrayList<Integer> right;
     private final ArrayList<Integer> left;
+    private final ArrayList<Integer> clockWise;
+    private final ArrayList<Integer> counterClockWise;
     private final ArrayList<Integer> regularBomb;
     private final ArrayList<Integer> radioactiveBomb;
     private final ArrayList<Integer> clusterBomb;
     private final ArrayList<Integer> iceMode;
+    private final ArrayList<Integer> nextWave;
 
     public Setting() {
         up = new ArrayList<>();
@@ -30,6 +33,12 @@ public class Setting {
         left = new ArrayList<>();
         left.add(Input.Keys.LEFT);
         left.add(Input.Keys.A);
+        clockWise = new ArrayList<>();
+        clockWise.add(Input.Keys.NUMPAD_8);
+        clockWise.add(Input.Keys.NUMPAD_6);
+        counterClockWise = new ArrayList<>();
+        counterClockWise.add(Input.Keys.NUMPAD_2);
+        counterClockWise.add(Input.Keys.NUMPAD_4);
         regularBomb = new ArrayList<>();
         regularBomb.add(Input.Keys.SPACE);
         radioactiveBomb = new ArrayList<>();
@@ -38,6 +47,8 @@ public class Setting {
         clusterBomb.add(Input.Keys.C);
         iceMode = new ArrayList<>();
         iceMode.add(Input.Keys.TAB);
+        nextWave = new ArrayList<>();
+        nextWave.add(Input.Keys.N);
         difficulty = Difficulty.easy;
         isMute = false;
         isBlackAndWhite = false;
@@ -115,6 +126,14 @@ public class Setting {
         return left;
     }
 
+    public ArrayList<Integer> getClockWise() {
+        return clockWise;
+    }
+
+    public ArrayList<Integer> getCounterClockWise() {
+        return counterClockWise;
+    }
+
     public ArrayList<Integer> getRegularBomb() {
         return regularBomb;
     }
@@ -129,5 +148,9 @@ public class Setting {
 
     public ArrayList<Integer> getIceMode() {
         return iceMode;
+    }
+
+    public ArrayList<Integer> getNextWave() {
+        return nextWave;
     }
 }

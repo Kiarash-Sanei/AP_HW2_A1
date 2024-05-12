@@ -10,7 +10,7 @@ public class Bonus extends GameObject {
     private Prize prize;
 
     public Bonus(float x, Prize prize) {
-        super(x, 200);
+        super(x, 0);
         if (User.getCurrentUser().getSetting().getBlackAndWhite())
             image = new Image(new Texture("Bonus/B&W/Bonus.png"));
         else
@@ -19,10 +19,12 @@ public class Bonus extends GameObject {
         image.setWidth(GameObjects.Bonus.getWidth());
         image.setPosition(x, y);
         this.prize = prize;
+        velocityY = 50;
     }
 
     public void update(float deltaTime) {
-
+        y += velocityY * deltaTime;
+        image.setPosition(x, y);
     }
 
     public void draw(SpriteBatch batch) {

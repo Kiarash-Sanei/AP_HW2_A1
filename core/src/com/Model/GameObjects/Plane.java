@@ -2,6 +2,7 @@ package com.Model.GameObjects;
 
 import com.Model.Keyboard;
 import com.Model.Setting;
+import com.View.GameMenuScreen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -33,6 +34,7 @@ public class Plane extends GameObject {
         image.setHeight(GameObjects.Plane.getHeight());
         image.setWidth(GameObjects.Plane.getWidth());
         image.setPosition(x, y);
+        image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
         for (Keyboard key : Keyboard.values()) {
             Keyboard.status.put(key, false);
         }
@@ -43,6 +45,7 @@ public class Plane extends GameObject {
         velocityX = 0;
         accelerationY = acceleration;
         velocityY = 0;
+        angularVelocity = 50;
     }
 
     public void regularBomb() {
@@ -66,7 +69,7 @@ public class Plane extends GameObject {
     }
 
     public void iceMode() {
-
+        GameMenuScreen.setIceMode(!GameMenuScreen.getIceMode());
     }
 
     public Keyboard toKeyboard(int keyCode) {
@@ -78,6 +81,10 @@ public class Plane extends GameObject {
             return Keyboard.RIGHT;
         if (setting.getLeft().contains(keyCode))
             return Keyboard.LEFT;
+        if (setting.getClockWise().contains(keyCode))
+            return Keyboard.CLOCK_WISE;
+        if (setting.getCounterClockWise().contains(keyCode))
+            return Keyboard.COUNTER_CLOCK_WISE;
         if (setting.getRegularBomb().contains(keyCode))
             return Keyboard.REGULAR_BOMB;
         if (setting.getRadioactiveBomb().contains(keyCode))
@@ -86,6 +93,8 @@ public class Plane extends GameObject {
             return Keyboard.CLUSTER_BOMB;
         if (setting.getIceMode().contains(keyCode))
             return Keyboard.ICE_MODE;
+        if (setting.getNextWave().contains(keyCode))
+            return Keyboard.NEXT_WAVE;
         return null;
     }
 
@@ -128,8 +137,14 @@ public class Plane extends GameObject {
             else if (velocityX > 0)
                 velocityX -= accelerationX * deltaTime;
         }
-        x += velocityX * deltaTime;
-        y += velocityY * deltaTime;
+        if (Math.abs(velocityX) <= 1 || Math.abs(velocityY) <= 1)
+            angle = 0;
+        else
+            angle = (float) (Math.atan(velocityY / velocityX) * 30);
+        if (Keyboard.status.get(Keyboard.CLOCK_WISE))
+            angle -= angularVelocity * deltaTime;
+        else if (Keyboard.status.get(Keyboard.COUNTER_CLOCK_WISE))
+            angle += angularVelocity * deltaTime;
         if (Keyboard.status.get(Keyboard.REGULAR_BOMB)) {
             regularBombTime += deltaTime;
             if (regularBombTime > minimumTime) {
@@ -151,8 +166,15 @@ public class Plane extends GameObject {
                 radioactiveBombTime = 0;
             }
         }
+        if (Keyboard.status.get(Keyboard.ICE_MODE))
+            this.iceMode();
+        if (Keyboard.status.get(Keyboard.NEXT_WAVE))
+            GameMenuScreen.nextWave();
+        x += velocityX * deltaTime;
+        y += velocityY * deltaTime;
         wrapper();
         image.setPosition(x, y);
+        image.setRotation(angle);
         for (RegularBomb regularBomb : regularBombs)
             regularBomb.update(deltaTime);
         for (ClusterBomb clusterBomb : clusterBombs)

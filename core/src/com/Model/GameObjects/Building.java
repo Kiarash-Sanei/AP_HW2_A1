@@ -17,10 +17,6 @@ public class Building extends GameObject {
         image.setPosition(x, y);
     }
 
-    public void update(float deltaTime) {
-
-    }
-
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);
     }

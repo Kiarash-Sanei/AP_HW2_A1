@@ -1,6 +1,7 @@
 package com.Model.GameObjects;
 
 import com.Model.Setting;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -8,26 +9,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class Tank extends GameObject {
-    private float speed;
     private final float radius;
 
     public Tank(float x, float y, Setting setting) {
         super(x, y);
         switch (setting.getDifficulty()) {
             case easy:
-                speed = 10;
+                velocityX = 10;
                 radius = 100;
                 break;
             case medium:
-                speed = 20;
+                velocityX = 20;
                 radius = 200;
                 break;
             case hard:
-                speed = 30;
+                velocityX = 30;
                 radius = 300;
                 break;
             default:
-                speed = 0;
+                velocityX = 0;
                 radius = 0;
                 break;
         }
@@ -40,20 +40,22 @@ public class Tank extends GameObject {
         image.setPosition(x, y);
     }
 
-    public void update(float deltaTime) {
-        x += speed * deltaTime;
-        image.setPosition(x, y);
-        wrapper();
+    public void update(float deltaTime, boolean iceMode) {
+        if (!iceMode) {
+            x += velocityX * deltaTime;
+            image.setPosition(x, y);
+            wrapper();
+        }
     }
 
     public void wrapper() {
-        if (x > graphics.getWidth() - GameObjects.Tank.getWidth())
-            speed = -speed;
-        else if (x < 0)
-            speed = -speed;
+        if (x > graphics.getWidth() - GameObjects.Tank.getWidth() || x < 0)
+            velocityX = -velocityX;
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, boolean iceMode) {
+        if (iceMode)
+            image.setColor(Color.CYAN);
         image.draw(batch, 1);
     }
 }

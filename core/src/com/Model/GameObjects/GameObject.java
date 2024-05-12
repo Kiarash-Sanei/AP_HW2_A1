@@ -23,8 +23,8 @@ public abstract class GameObject {
         this.y = y;
     }
 
-    public boolean isOn(GameObject gameObject) {//TODO: It is not working.
-        return (gameObject.y <= y + this.image.getHeight() &&
+    public boolean isOn(GameObject gameObject) {
+        return ((gameObject.y <= y + this.image.getHeight() &&
                 gameObject.y >= y &&
                 gameObject.x <= x + this.image.getWidth() &&
                 gameObject.x >= x) ||
@@ -39,7 +39,9 @@ public abstract class GameObject {
                 (gameObject.y + gameObject.image.getHeight() <= y + this.image.getHeight() &&
                         gameObject.y + gameObject.image.getHeight() >= y &&
                         gameObject.x + gameObject.image.getWidth() <= x + this.image.getWidth() &&
-                        gameObject.x + gameObject.image.getWidth() >= x);
+                        gameObject.x + gameObject.image.getWidth() >= x)) &&
+                this.isAlive &&
+                gameObject.isAlive;
     }
 
     public float getX() {
