@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import static com.badlogic.gdx.Gdx.graphics;
+
 public class Mig extends GameObject {
+    private static final float acceleration = 600;
     private final float period;
     private final float radius;
-    private final float speed = 200;
+    private static float timer;
 
     public Mig(float x, float y, Setting setting) {
         super(x, y);
@@ -37,20 +40,31 @@ public class Mig extends GameObject {
         image.setHeight(GameObjects.Mig.getHeight());
         image.setWidth(GameObjects.Mig.getWidth());
         image.setPosition(x, y);
+        accelerationX = acceleration;
+        velocityX = 0;
     }
 
     public void update(float deltaTime) {
-        x += speed * deltaTime;
+        velocityX += accelerationX * deltaTime;
+        x += velocityX * deltaTime;
         image.setPosition(x, y);
         wrapper();
     }
 
     public void wrapper() {
-        if (x < 0)
+        if (graphics.getWidth() < x)
             isAlive = false;
     }
 
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);
+    }
+
+    public void passTime(float deltaTime) {
+        timer += deltaTime;
+    }
+
+    public float getTimer() {
+        return timer;
     }
 }

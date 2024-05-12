@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class Plane extends GameObject {
+    private static final float acceleration = 50;
+    private static final float minimumTime = 0.1f;
     private final Setting setting;
-    private final float acceleration = 50;
-    private final float minimumTime = 0.1f;
     private final ArrayList<RegularBomb> regularBombs;
     private float regularBombTime = minimumTime;
     private final ArrayList<ClusterBomb> clusterBombs;
@@ -166,8 +166,8 @@ public class Plane extends GameObject {
             x = graphics.getWidth();
         else if (x > graphics.getWidth())
             x = -GameObjects.Plane.getWidth();
-        if (y < GameObjects.Plane.getHeight() * 3) {
-            y = GameObjects.Plane.getHeight() * 3;
+        if (y < GameObjects.Plane.getHeight() * 5) {
+            y = GameObjects.Plane.getHeight() * 5;
             velocityY = 0;
         } else if (y > graphics.getHeight() - GameObjects.Plane.getHeight()) {
             y = graphics.getHeight() - GameObjects.Plane.getHeight();

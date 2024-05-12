@@ -1,5 +1,6 @@
 package com;
 
+import com.Model.User;
 import com.View.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
@@ -49,28 +50,32 @@ public class AtomicBomber extends Game {
     }
 
     private static void setMusic(MenuScreen oldMenuScreen, MenuScreen newMenuScreen) {
-        if ((newMenuScreen.getClass() == AvatarMenuScreen.class ||
-                newMenuScreen.getClass() == LeaderboardMenuScreen.class ||
-                newMenuScreen.getClass() == LoginMenuScreen.class ||
-                newMenuScreen.getClass() == MainMenuScreen.class ||
-                newMenuScreen.getClass() == ProfileMenuScreen.class ||
-                newMenuScreen.getClass() == SettingScreen.class) &&
-                (oldMenuScreen.getClass() == GameMenuScreen.class)) {
-            music.stop();
-            music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GeneralMusic.mp3"));
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            if ((newMenuScreen.getClass() == AvatarMenuScreen.class ||
+                    newMenuScreen.getClass() == LeaderboardMenuScreen.class ||
+                    newMenuScreen.getClass() == LoginMenuScreen.class ||
+                    newMenuScreen.getClass() == MainMenuScreen.class ||
+                    newMenuScreen.getClass() == ProfileMenuScreen.class ||
+                    newMenuScreen.getClass() == SettingScreen.class) &&
+                    (oldMenuScreen.getClass() == GameMenuScreen.class)) {
+                music.stop();
+                music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GeneralMusic.mp3"));
+            } else if ((oldMenuScreen.getClass() == AvatarMenuScreen.class ||
+                    oldMenuScreen.getClass() == LeaderboardMenuScreen.class ||
+                    oldMenuScreen.getClass() == LoginMenuScreen.class ||
+                    oldMenuScreen.getClass() == MainMenuScreen.class ||
+                    oldMenuScreen.getClass() == ProfileMenuScreen.class ||
+                    oldMenuScreen.getClass() == SettingScreen.class) &&
+                    (newMenuScreen.getClass() == GameMenuScreen.class)) {
+                music.stop();
+                music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GameMusic.mp3"));
+            }
+            music.setLooping(true);
+            music.setVolume(0.5f);
+            music.play();
         }
-        else if ((oldMenuScreen.getClass() == AvatarMenuScreen.class ||
-                oldMenuScreen.getClass() == LeaderboardMenuScreen.class ||
-                oldMenuScreen.getClass() == LoginMenuScreen.class ||
-                oldMenuScreen.getClass() == MainMenuScreen.class ||
-                oldMenuScreen.getClass() == ProfileMenuScreen.class ||
-                oldMenuScreen.getClass() == SettingScreen.class) &&
-                (newMenuScreen.getClass() == GameMenuScreen.class)) {
+        else {
             music.stop();
-            music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GameMusic.mp3"));
         }
-        music.setLooping(true);
-        music.setVolume(0.5f);
-        music.play();
     }
 }

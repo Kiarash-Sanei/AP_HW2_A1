@@ -1,5 +1,6 @@
 package com.Control;
 
+import com.AtomicBomber;
 import com.Model.Difficulty;
 import com.Model.Setting;
 import com.Model.User;
@@ -10,6 +11,7 @@ public class SettingMenu extends Menu {
 
     public static void changeMute() {
         setting.setMute(!setting.getMute());
+        settingMenu();
     }
 
     public static void changeColorMode() {

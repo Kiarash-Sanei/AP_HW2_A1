@@ -17,40 +17,53 @@ import java.util.Random;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class GameMenuScreen extends MenuScreen {
-    public final User user;
-    public final Plane plane;
-    public final ArrayList<Tank> tanks;
-    public final ArrayList<Tree> trees;
-    public final ArrayList<Trench> trenches;
-    public final ArrayList<Truck> trucks;
-    public final ArrayList<Mig> migs;
-    public final ArrayList<Building> buildings;
-    public final ArrayList<Bonus> bonuses;
+    private final Wave wave;
+    private final User user;
+    private final Plane plane;
+    private final ArrayList<Building> buildings;
+    private final ArrayList<Mig> migs;
+    private final ArrayList<Tank> tanks;
+    private final ArrayList<Tree> trees;
+    private final ArrayList<Trench> trenches;
+    private final ArrayList<Truck> trucks;
+    private final ArrayList<Bonus> bonuses;
     private final SpriteBatch batch;
 
-    public GameMenuScreen(AtomicBomber atomicBomber) {
+    public GameMenuScreen(AtomicBomber atomicBomber, Wave wave) {
         super(atomicBomber);
+        this.wave = wave;
         assetLoader();
-        user = User.getCurrentUser();
-        plane = new Plane((float) graphics.getWidth() /2 - GameObjects.Plane.getWidth() / 2,
-                (float) graphics.getHeight() /2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
-        tanks = new ArrayList<>();
-        tanks.add(new Tank(0, 0, user.getSetting()));
-        trees = new ArrayList<>();
+        int x;
         Random random = new Random();
-        int x = random.nextInt((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
-        trees.add(new Tree(x, 0));
-        trenches = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
-        trenches.add(new Trench(x, 0));
-        trucks = new ArrayList<>();
-        trucks.add(new Truck(0, 0));
-        migs = new ArrayList<>();
-        x = random.nextInt((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
-        migs.add(new Mig(0, x, user.getSetting()));
+        user = User.getCurrentUser();
+        plane = new Plane((float) graphics.getWidth() / 2 - GameObjects.Plane.getWidth() / 2,
+                (float) graphics.getHeight() / 2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
         buildings = new ArrayList<>();
-        x = random.nextInt((int) (graphics.getWidth() - GameObjects.Mig.getWidth()));
-        buildings.add(new Building(x, 0));
+        for (int i = 0; i < wave.getBuilding(); i++) {
+            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Mig.getWidth()));
+            buildings.add(new Building(x, 0));
+        }
+        migs = new ArrayList<>();
+        for (int i = 0; i < wave.getMig(); i++) {
+            x = random.nextInt((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
+            migs.add(new Mig(-GameObjects.Mig.getWidth(), x, user.getSetting()));
+        }
+        tanks = new ArrayList<>();
+        for (int i = 0; i < wave.getTank(); i++)
+            tanks.add(new Tank(0, 0, user.getSetting()));
+        trees = new ArrayList<>();
+        for (int i = 0; i < wave.getTree(); i++) {
+            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
+            trees.add(new Tree(x, 0));
+        }
+        trenches = new ArrayList<>();
+        for (int i = 0; i < wave.getTrench(); i++) {
+            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
+            trenches.add(new Trench(x, 0));
+        }
+        trucks = new ArrayList<>();
+        for (int i = 0; i < wave.getTruck(); i++)
+            trucks.add(new Truck(0, 0));
         bonuses = new ArrayList<>();
         stage.addListener(new ClickListener() {
             @Override
@@ -91,6 +104,10 @@ public class GameMenuScreen extends MenuScreen {
                 bonuses.add(new Bonus(collied[0].getX() + GameObjects.getWidth(collied[0]) / 2 - GameObjects.Bonus.getWidth() / 2,
                         collied[0].getY() + GameObjects.Building.getHeight() + 100));
             }
+            if (collied[0].getClass() == Trench.class) {
+                bonuses.add(new Bonus(collied[0].getX() + GameObjects.getWidth(collied[0]) / 2 - GameObjects.Bonus.getWidth() / 2,
+                        collied[0].getY() + GameObjects.Trench.getHeight() + 220));
+            }
         }
         ScreenUtils.clear(1, 1, 1, 1);
         super.render(delta);
@@ -111,6 +128,10 @@ public class GameMenuScreen extends MenuScreen {
             bonus.update(delta);
         batch.begin();
         plane.draw(batch);
+        for (Building building : buildings)
+            building.draw(batch);
+        for (Mig mig : migs)
+            mig.draw(batch);
         for (Tank tank : tanks)
             tank.draw(batch);
         for (Tree tree : trees)
@@ -119,10 +140,6 @@ public class GameMenuScreen extends MenuScreen {
             trench.draw(batch);
         for (Truck truck : trucks)
             truck.draw(batch);
-        for (Mig mig : migs)
-            mig.draw(batch);
-        for (Building building : buildings)
-            building.draw(batch);
         for (Bonus bonus : bonuses)
             bonus.draw(batch);
         batch.end();

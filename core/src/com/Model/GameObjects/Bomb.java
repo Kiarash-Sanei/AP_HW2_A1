@@ -33,7 +33,7 @@ public abstract class Bomb extends GameObject {
     public void wrapper() {
         if (y < 0 ||
                 x < 0 ||
-                graphics.getWidth() < x + image.getWidth())
+                graphics.getWidth() < x)
             isAlive = false;
     }
 
