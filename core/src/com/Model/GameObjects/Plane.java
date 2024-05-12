@@ -202,4 +202,16 @@ public class Plane extends GameObject {
     public void clusterBombIncrease() {
         this.clusterBombCount++;
     }
+
+    public ArrayList<RegularBomb> getRegularBombs() {
+        return this.regularBombs;
+    }
+
+    public ArrayList<ClusterBomb> getClusterBombs() {
+        return this.clusterBombs;
+    }
+
+    public ArrayList<RadioactiveBomb> getRadioactiveBombs() {
+        return this.radioactiveBombs;
+    }
 }

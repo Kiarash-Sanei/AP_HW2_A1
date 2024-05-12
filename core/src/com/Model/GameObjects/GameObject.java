@@ -1,12 +1,10 @@
 package com.Model.GameObjects;
 
-import com.badlogic.gdx.physics.bullet.collision._btMprSimplex_t;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.ArrayList;
 
 public abstract class GameObject {
-    private static final ArrayList<GameObject> gameObjects = new ArrayList<>();
     protected float x;
     protected float y;
     protected float velocityX;
@@ -20,33 +18,28 @@ public abstract class GameObject {
     protected boolean isAlive;
 
     public GameObject(float x, float y) {
-        gameObjects.add(this);
         this.isAlive = true;
         this.x = x;
         this.y = y;
     }
 
-    public static ArrayList<GameObject> getGameObjects() {
-        return gameObjects;
-    }
-
     public boolean isOn(GameObject gameObject) {//TODO: It is not working.
-        return (gameObject.getY() <= y + this.image.getHeight() &&
-                gameObject.getY() >= y &&
-                gameObject.getX() >= x &&
-                gameObject.getX() <= x + this.image.getWidth()) ||
-                (gameObject.getY() <= y + this.image.getHeight() &&
-                        gameObject.getY() >= y &&
-                        gameObject.getX() + gameObject.image.getWidth() >= x &&
-                        gameObject.getX() + gameObject.image.getWidth() <= x + this.image.getWidth()) ||
-                (gameObject.getY() + gameObject.image.getHeight() <= y + this.image.getHeight() &&
-                        gameObject.getY() + gameObject.image.getHeight() >= y &&
-                        gameObject.getX() >= x &&
-                        gameObject.getX() <= x + this.image.getWidth()) ||
-                (gameObject.getY() + gameObject.image.getHeight() <= y + this.image.getHeight() &&
-                        gameObject.getY() + gameObject.image.getHeight() >= y &&
-                        gameObject.getX() + gameObject.image.getWidth() >= x &&
-                        gameObject.getX() + gameObject.image.getWidth() <= x + this.image.getWidth());
+        return (gameObject.y <= y + this.image.getHeight() &&
+                gameObject.y >= y &&
+                gameObject.x <= x + this.image.getWidth() &&
+                gameObject.x >= x) ||
+                (gameObject.y <= y + this.image.getHeight() &&
+                        gameObject.y >= y &&
+                        gameObject.x + gameObject.image.getWidth() <= x + this.image.getWidth() &&
+                        gameObject.x + gameObject.image.getWidth() >= x) ||
+                (gameObject.y + gameObject.image.getHeight() <= y + this.image.getHeight() &&
+                        gameObject.y + gameObject.image.getHeight() >= y &&
+                        gameObject.x <= x + this.image.getWidth() &&
+                        gameObject.x >= x) ||
+                (gameObject.y + gameObject.image.getHeight() <= y + this.image.getHeight() &&
+                        gameObject.y + gameObject.image.getHeight() >= y &&
+                        gameObject.x + gameObject.image.getWidth() <= x + this.image.getWidth() &&
+                        gameObject.x + gameObject.image.getWidth() >= x);
     }
 
     public float getX() {

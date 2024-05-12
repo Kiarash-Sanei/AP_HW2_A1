@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.Model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import static com.badlogic.gdx.Gdx.graphics;
@@ -98,50 +99,70 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
-        GameObject[] collied = GameMenu.collision();
-        if (collied != null) {
-            if (collied[0].getClass() == Building.class) {
-                bonuses.add(new Bonus(collied[0].getX() + GameObjects.getWidth(collied[0]) / 2 - GameObjects.Bonus.getWidth() / 2,
-                        collied[0].getY() + GameObjects.Building.getHeight() + 100));
-            }
-            if (collied[0].getClass() == Trench.class) {
-                bonuses.add(new Bonus(collied[0].getX() + GameObjects.getWidth(collied[0]) / 2 - GameObjects.Bonus.getWidth() / 2,
-                        collied[0].getY() + GameObjects.Trench.getHeight() + 220));
-            }
+        if (!buildings.isEmpty()) {
+            ArrayList<Float> buildingBonuses = GameMenu.buildingCollision(buildings, plane);
+            for (Float x : buildingBonuses)
+                bonuses.add(new Bonus(x, Prize.radioactiveBomb));
+            for (Building building : buildings)
+                building.update(delta);
         }
-        ScreenUtils.clear(1, 1, 1, 1);
-        super.render(delta);
+        if (!trenches.isEmpty()) {
+            ArrayList<Float> trenchBonuses = GameMenu.trenchCollision(trenches, plane);
+            for (Float x : trenchBonuses)
+                bonuses.add(new Bonus(x, Prize.clusterBomb));
+            for (Trench trench : trenches)
+                trench.update(delta);
+        }
+        if (!tanks.isEmpty()) {
+            GameMenu.tankCollision(tanks, plane);
+            for (Tank tank : tanks)
+                tank.update(delta);
+        }
+        if (!trucks.isEmpty()) {
+            GameMenu.truckCollision(trucks, plane);
+            for (Truck truck : trucks)
+                truck.update(delta);
+        }
+        if (!trees.isEmpty()) {
+            GameMenu.treeCollision(trees, plane);
+            for (Tree tree : trees)
+                tree.update(delta);
+        }
+        if (!migs.isEmpty()) {
+            GameMenu.migCollision(migs, plane);
+            for (Mig mig : migs)
+                mig.update(delta);
+        }
+        if (!bonuses.isEmpty()) {
+            GameMenu.bonusCollision(bonuses, plane);
+            for (Bonus bonus : bonuses)
+                bonus.update(delta);
+        }
         plane.update(delta);
-        for (Tank tank : tanks)
-            tank.update(delta);
-        for (Tree tree : trees)
-            tree.update(delta);
-        for (Trench trench : trenches)
-            trench.update(delta);
-        for (Truck truck : trucks)
-            truck.update(delta);
-        for (Mig mig : migs)
-            mig.update(delta);
-        for (Building building : buildings)
-            building.update(delta);
-        for (Bonus bonus : bonuses)
-            bonus.update(delta);
+        super.render(delta);
         batch.begin();
         plane.draw(batch);
-        for (Building building : buildings)
-            building.draw(batch);
-        for (Mig mig : migs)
-            mig.draw(batch);
-        for (Tank tank : tanks)
-            tank.draw(batch);
-        for (Tree tree : trees)
-            tree.draw(batch);
-        for (Trench trench : trenches)
-            trench.draw(batch);
-        for (Truck truck : trucks)
-            truck.draw(batch);
-        for (Bonus bonus : bonuses)
-            bonus.draw(batch);
+        if (!buildings.isEmpty())
+            for (Building building : buildings)
+                building.draw(batch);
+        if (!migs.isEmpty())
+            for (Mig mig : migs)
+                mig.draw(batch);
+        if (!tanks.isEmpty())
+            for (Tank tank : tanks)
+                tank.draw(batch);
+        if (!trees.isEmpty())
+            for (Tree tree : trees)
+                tree.draw(batch);
+        if (!trenches.isEmpty())
+            for (Trench trench : trenches)
+                trench.draw(batch);
+        if (!trucks.isEmpty())
+            for (Truck truck : trucks)
+                truck.draw(batch);
+        if (!bonuses.isEmpty())
+            for (Bonus bonus : bonuses)
+                bonus.draw(batch);
         batch.end();
         plane.removeIf();
         tanks.removeIf(tank -> !tank.getIsAlive());
