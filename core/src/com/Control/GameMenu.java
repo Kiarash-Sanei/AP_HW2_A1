@@ -3,6 +3,9 @@ package com.Control;
 import com.AtomicBomber;
 import com.Model.Effect.EffectGif;
 import com.Model.GameObjects.*;
+import com.Model.GameObjects.Bombs.ClusterBomb;
+import com.Model.GameObjects.Bombs.RadioactiveBomb;
+import com.Model.GameObjects.Bombs.RegularBomb;
 import com.Model.Prize;
 import com.Model.Wave;
 import com.View.GameMenuScreen;
@@ -185,5 +188,8 @@ public class GameMenu extends Menu {
 
     public static void gameOver() {
 
+    }
+    public static boolean detectPlane(Attacker attacker, Plane plane) {
+        return plane.getY() <= attacker.getY() + attacker.getRadius() && plane.getX() <= attacker.getX() + attacker.getRadius();
     }
 }

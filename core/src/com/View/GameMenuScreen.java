@@ -152,8 +152,10 @@ public class GameMenuScreen extends MenuScreen {
         }
         if (!tanks.isEmpty()) {
             GameMenu.tankCollision(tanks, plane);
-            for (Tank tank : tanks)
+            for (Tank tank : tanks) {
                 tank.update(delta, iceMode);
+                tank.attack(plane);
+            }
         }
         if (!trucks.isEmpty()) {
             GameMenu.truckCollision(trucks, plane);
@@ -164,8 +166,10 @@ public class GameMenuScreen extends MenuScreen {
             GameMenu.treeCollision(trees, plane);
         if (!migs.isEmpty()) {
             GameMenu.migCollision(migs, plane);
-            for (Mig mig : migs)
-                mig.update(delta);
+            for (Mig mig : migs) {
+                mig.update(delta, iceMode);
+                mig.attack(plane);
+            }
         }
         if (!bonuses.isEmpty()) {
             GameMenu.bonusCollision(bonuses, plane);
@@ -175,7 +179,7 @@ public class GameMenuScreen extends MenuScreen {
         if (!effectGifs.isEmpty())
             for (EffectGif effectGif : effectGifs)
                 effectGif.update(delta);
-        plane.update(delta,this);
+        plane.update(delta, this);
         super.render(delta);
         batch.begin();
         plane.draw(batch);
@@ -184,7 +188,7 @@ public class GameMenuScreen extends MenuScreen {
                 building.draw(batch);
         if (!migs.isEmpty())
             for (Mig mig : migs)
-                mig.draw(batch);
+                mig.draw(batch, iceMode);
         if (!tanks.isEmpty())
             for (Tank tank : tanks)
                 tank.draw(batch, iceMode);
@@ -202,7 +206,7 @@ public class GameMenuScreen extends MenuScreen {
                 bonus.draw(batch);
         if (!effectGifs.isEmpty())
             for (EffectGif effectGif : effectGifs)
-                effectGif.render(batch,delta);
+                effectGif.render(batch, delta);
         batch.end();
         plane.removeIf();
         tanks.removeIf(tank -> !tank.getIsAlive());
@@ -256,6 +260,7 @@ public class GameMenuScreen extends MenuScreen {
         if (Keyboard.status.get(Keyboard.REVIVE))
             return;//TODO: change it.
     }
+
     public void addEffect(EffectGif effectGif) {
         effectGifs.add(effectGif);
     }

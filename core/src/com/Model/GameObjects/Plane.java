@@ -1,5 +1,8 @@
 package com.Model.GameObjects;
 
+import com.Model.GameObjects.Bombs.ClusterBomb;
+import com.Model.GameObjects.Bombs.RadioactiveBomb;
+import com.Model.GameObjects.Bombs.RegularBomb;
 import com.Model.Keyboard;
 import com.Model.Setting;
 import com.View.GameMenuScreen;

@@ -1,5 +1,7 @@
-package com.Model.GameObjects;
+package com.Model.GameObjects.Bombs;
 
+import com.Model.GameObjects.GameObject;
+import com.Model.GameObjects.Plane;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class Bomb extends GameObject {
