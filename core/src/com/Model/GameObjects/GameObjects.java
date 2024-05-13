@@ -11,7 +11,10 @@ public enum GameObjects {
     Tank(70, (float) (70 * 1263) / 634),
     Tree(70, (float) (70 * 573) / 640),
     Trench(30, (float) (30 * 1484) / 674),
-    Truck(50, (float) (50 * 983) / 352);
+    Truck(50, (float) (50 * 983) / 352),
+    ClusterBombGif(90,90),
+    RadioactiveBombGif(60,60),
+    RegularBombGif(30,30);
     private final float height;
     private final float width;
 
@@ -50,6 +53,12 @@ public enum GameObjects {
             return Trench.getHeight();
         } else if (gameObject.getClass().equals(com.Model.GameObjects.Truck.class)) {
             return Truck.getHeight();
+        } else if (gameObject.getClass().equals(com.Model.Effect.ClusterBombGif.class)) {
+            return ClusterBombGif.getHeight();
+        } else if (gameObject.getClass().equals(com.Model.Effect.RadioactiveBombGif.class)) {
+            return RegularBombGif.getHeight();
+        } else if (gameObject.getClass().equals(com.Model.Effect.RegularBombGif.class)) {
+            return RegularBombGif.getHeight();
         }
         return 0;
     }
@@ -76,6 +85,12 @@ public enum GameObjects {
             return Trench.getWidth();
         } else if (gameObject.getClass().equals(com.Model.GameObjects.Truck.class)) {
             return Truck.getWidth();
+        } else if (gameObject.getClass().equals(com.Model.Effect.ClusterBombGif.class)) {
+            return ClusterBombGif.getWidth();
+        } else if (gameObject.getClass().equals(com.Model.Effect.RadioactiveBombGif.class)) {
+            return RegularBombGif.getWidth();
+        } else if (gameObject.getClass().equals(com.Model.Effect.RegularBombGif.class)) {
+            return RegularBombGif.getWidth();
         }
         return 0;
     }

@@ -2,8 +2,6 @@ package com.Model.GameObjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import static com.badlogic.gdx.Gdx.graphics;
-
 public abstract class Bomb extends GameObject {
     protected static final float ratio = 0.5f;
 
@@ -30,12 +28,7 @@ public abstract class Bomb extends GameObject {
         wrapper();
     }
 
-    public void wrapper() {
-        if (y < 0 ||
-                x < 0 ||
-                graphics.getWidth() < x)
-            isAlive = false;
-    }
+    public abstract void wrapper();
 
     public void draw(SpriteBatch batch) {
         image.draw(batch, 1);

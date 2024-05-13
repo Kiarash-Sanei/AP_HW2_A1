@@ -1,6 +1,7 @@
 package com.Control;
 
 import com.AtomicBomber;
+import com.Model.Effect.EffectGif;
 import com.Model.GameObjects.*;
 import com.Model.Prize;
 import com.Model.Wave;
@@ -168,14 +169,20 @@ public class GameMenu extends Menu {
             }
         }
     }
+
+    public static void addEffect(EffectGif effectGif) {
+        gameMenuScreen.addEffect(effectGif);
+    }
+
     public static void changeWave(Wave wave) {
-        if (wave==Wave.first)
-            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(),Wave.second));
-        else if (wave==Wave.second)
-            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(),Wave.third));
+        if (wave == Wave.first)
+            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.second));
+        else if (wave == Wave.second)
+            AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.third));
         else
             gameOver();
     }
+
     public static void gameOver() {
 
     }

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import static com.badlogic.gdx.Gdx.graphics;
+
 public class Bonus extends GameObject {
     private Prize prize;
 
@@ -25,6 +27,11 @@ public class Bonus extends GameObject {
     public void update(float deltaTime) {
         y += velocityY * deltaTime;
         image.setPosition(x, y);
+        wrapper();
+    }
+    public void wrapper() {
+        if (graphics.getHeight() < y)
+            isAlive = false;
     }
 
     public void draw(SpriteBatch batch) {

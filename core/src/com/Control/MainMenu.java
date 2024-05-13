@@ -6,7 +6,8 @@ import com.View.*;
 
 public class MainMenu extends Menu {
     public static void newGame() {
-        AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.first));
+        gameMenuScreen = new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.first);
+        AtomicBomber.changeScreen(gameMenuScreen);
     }
 
     public static void previousGame() {

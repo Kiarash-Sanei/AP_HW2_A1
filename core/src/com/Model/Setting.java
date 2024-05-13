@@ -19,6 +19,10 @@ public class Setting {
     private final ArrayList<Integer> clusterBomb;
     private final ArrayList<Integer> iceMode;
     private final ArrayList<Integer> nextWave;
+    private final ArrayList<Integer> radioactiveBombIncrease;
+    private final ArrayList<Integer> clusterBombIncrease;
+    private final ArrayList<Integer> tankIncrease;
+    private final ArrayList<Integer> revive;
 
     public Setting() {
         up = new ArrayList<>();
@@ -48,7 +52,16 @@ public class Setting {
         iceMode = new ArrayList<>();
         iceMode.add(Input.Keys.TAB);
         nextWave = new ArrayList<>();
-        nextWave.add(Input.Keys.N);
+        nextWave.add(Input.Keys.P);
+        radioactiveBombIncrease = new ArrayList<>();
+        radioactiveBombIncrease.add(Input.Keys.G);
+        clusterBombIncrease = new ArrayList<>();
+        clusterBombIncrease.add(Input.Keys.CONTROL_LEFT);
+        clusterBombIncrease.add(Input.Keys.CONTROL_RIGHT);
+        tankIncrease = new ArrayList<>();
+        tankIncrease.add(Input.Keys.T);
+        revive = new ArrayList<>();
+        revive.add(Input.Keys.H);
         difficulty = Difficulty.easy;
         isMute = false;
         isBlackAndWhite = false;
@@ -152,5 +165,21 @@ public class Setting {
 
     public ArrayList<Integer> getNextWave() {
         return nextWave;
+    }
+
+    public ArrayList<Integer> getRadioactiveBombIncrease() {
+        return radioactiveBombIncrease;
+    }
+
+    public ArrayList<Integer> getClusterBombIncrease() {
+        return clusterBombIncrease;
+    }
+
+    public ArrayList<Integer> getTankIncrease() {
+        return tankIncrease;
+    }
+
+    public ArrayList<Integer> getRevive() {
+        return revive;
     }
 }

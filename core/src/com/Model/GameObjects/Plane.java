@@ -19,9 +19,11 @@ public class Plane extends GameObject {
     private float regularBombTime = minimumTime;
     private final ArrayList<ClusterBomb> clusterBombs;
     private float clusterBombTime = minimumTime;
+    private float clusterBombIncreaseTime = minimumTime;
     private int clusterBombCount = 0;
     private final ArrayList<RadioactiveBomb> radioactiveBombs;
     private float radioactiveBombTime = minimumTime;
+    private float radioactiveBombIncreaseTime = minimumTime;
     private int radioactiveBombCount = 0;
 
     public Plane(float x, float y, Setting setting) {
@@ -35,9 +37,6 @@ public class Plane extends GameObject {
         image.setWidth(GameObjects.Plane.getWidth());
         image.setPosition(x, y);
         image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
-        for (Keyboard key : Keyboard.values()) {
-            Keyboard.status.put(key, false);
-        }
         regularBombs = new ArrayList<>();
         clusterBombs = new ArrayList<>();
         radioactiveBombs = new ArrayList<>();
@@ -55,68 +54,24 @@ public class Plane extends GameObject {
     }
 
     public void radioactiveBomb() {
-        if (radioactiveBombCount > 0) {
+        if (radioactiveBombCount > 0 && radioactiveBombs.size() < 3) {
             this.radioactiveBombCount -= 1;
             this.radioactiveBombs.add(new RadioactiveBomb(this));
         }
     }
 
     public void clusterBomb() {
-        if (clusterBombCount > 0) {
+        if (clusterBombCount > 0 && clusterBombs.size() < 3) {
             this.clusterBombCount -= 1;
             this.clusterBombs.add(new ClusterBomb(this));
         }
     }
 
-    public void iceMode() {
-        GameMenuScreen.setIceMode(!GameMenuScreen.getIceMode());
+    public void iceMode(GameMenuScreen gameMenuScreen) {
+        gameMenuScreen.setIceMode(!gameMenuScreen.getIceMode());
     }
 
-    public Keyboard toKeyboard(int keyCode) {
-        if (setting.getUp().contains(keyCode))
-            return Keyboard.UP;
-        if (setting.getDown().contains(keyCode))
-            return Keyboard.DOWN;
-        if (setting.getRight().contains(keyCode))
-            return Keyboard.RIGHT;
-        if (setting.getLeft().contains(keyCode))
-            return Keyboard.LEFT;
-        if (setting.getClockWise().contains(keyCode))
-            return Keyboard.CLOCK_WISE;
-        if (setting.getCounterClockWise().contains(keyCode))
-            return Keyboard.COUNTER_CLOCK_WISE;
-        if (setting.getRegularBomb().contains(keyCode))
-            return Keyboard.REGULAR_BOMB;
-        if (setting.getRadioactiveBomb().contains(keyCode))
-            return Keyboard.RADIOACTIVE_BOMB;
-        if (setting.getClusterBomb().contains(keyCode))
-            return Keyboard.CLUSTER_BOMB;
-        if (setting.getIceMode().contains(keyCode))
-            return Keyboard.ICE_MODE;
-        if (setting.getNextWave().contains(keyCode))
-            return Keyboard.NEXT_WAVE;
-        return null;
-    }
-
-    public boolean keyDown(int keyCode) {
-        Keyboard keyboardAction = toKeyboard(keyCode);
-        if (keyboardAction != null) {
-            Keyboard.status.put(keyboardAction, true);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean keyUp(int keyCode) {
-        Keyboard keyboardAction = toKeyboard(keyCode);
-        if (keyboardAction != null) {
-            Keyboard.status.put(keyboardAction, false);
-            return true;
-        }
-        return false;
-    }
-
-    public void update(float deltaTime) {
+    public void update(float deltaTime, GameMenuScreen gameMenuScreen) {
         if (Keyboard.status.get(Keyboard.UP))
             velocityY += accelerationY * deltaTime;
         else if (Keyboard.status.get(Keyboard.DOWN))
@@ -167,9 +122,7 @@ public class Plane extends GameObject {
             }
         }
         if (Keyboard.status.get(Keyboard.ICE_MODE))
-            this.iceMode();
-        if (Keyboard.status.get(Keyboard.NEXT_WAVE))
-            GameMenuScreen.nextWave();
+            this.iceMode(gameMenuScreen);
         x += velocityX * deltaTime;
         y += velocityY * deltaTime;
         wrapper();
@@ -221,8 +174,24 @@ public class Plane extends GameObject {
         this.radioactiveBombCount++;
     }
 
+    public void radioactiveBombIncrease(float deltaTime) {
+        radioactiveBombIncreaseTime += deltaTime;
+        if (radioactiveBombIncreaseTime > minimumTime) {
+            this.radioactiveBombCount++;
+            radioactiveBombIncreaseTime = 0;
+        }
+    }
+
     public void clusterBombIncrease() {
         this.clusterBombCount++;
+    }
+
+    public void clusterBombIncrease(float deltaTime) {
+        clusterBombIncreaseTime += deltaTime;
+        if (clusterBombIncreaseTime > minimumTime) {
+            this.clusterBombCount++;
+            clusterBombIncreaseTime = 0;
+        }
     }
 
     public ArrayList<RegularBomb> getRegularBombs() {

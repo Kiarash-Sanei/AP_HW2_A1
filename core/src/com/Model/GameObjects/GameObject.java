@@ -2,8 +2,6 @@ package com.Model.GameObjects;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import java.util.ArrayList;
-
 public abstract class GameObject {
     protected float x;
     protected float y;

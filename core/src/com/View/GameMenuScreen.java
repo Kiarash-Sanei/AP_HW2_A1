@@ -2,6 +2,7 @@ package com.View;
 
 import com.AtomicBomber;
 import com.Control.GameMenu;
+import com.Model.Effect.EffectGif;
 import com.Model.GameObjects.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,8 +31,11 @@ public class GameMenuScreen extends MenuScreen {
     private final ArrayList<Trench> trenches;
     private final ArrayList<Truck> trucks;
     private final ArrayList<Bonus> bonuses;
-    private static boolean iceMode;
-    private static boolean nextWave;//TODO: change Key handling.
+    private boolean iceMode;
+    private boolean nextWave;
+    private final float minimumTime = 0.1f;
+    private float tankIncreaseTime = minimumTime;
+    private final ArrayList<EffectGif> effectGifs;
     private final SpriteBatch batch;
     private final Label waveMessage;
     private float waveMessageTimer;
@@ -93,15 +97,16 @@ public class GameMenuScreen extends MenuScreen {
         for (int i = 0; i < wave.getTruck(); i++)
             trucks.add(new Truck(0, 0));
         bonuses = new ArrayList<>();
+        effectGifs = new ArrayList<>();
         stage.addListener(new ClickListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                return plane.keyDown(keycode);
+                return Keyboard.keyDown(keycode, user.getSetting());
             }
 
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
-                return plane.keyUp(keycode);
+                return Keyboard.keyUp(keycode, user.getSetting());
             }
         });
         batch = new SpriteBatch();
@@ -167,7 +172,10 @@ public class GameMenuScreen extends MenuScreen {
             for (Bonus bonus : bonuses)
                 bonus.update(delta);
         }
-        plane.update(delta);
+        if (!effectGifs.isEmpty())
+            for (EffectGif effectGif : effectGifs)
+                effectGif.update(delta);
+        plane.update(delta,this);
         super.render(delta);
         batch.begin();
         plane.draw(batch);
@@ -192,6 +200,9 @@ public class GameMenuScreen extends MenuScreen {
         if (!bonuses.isEmpty())
             for (Bonus bonus : bonuses)
                 bonus.draw(batch);
+        if (!effectGifs.isEmpty())
+            for (EffectGif effectGif : effectGifs)
+                effectGif.render(batch,delta);
         batch.end();
         plane.removeIf();
         tanks.removeIf(tank -> !tank.getIsAlive());
@@ -201,6 +212,8 @@ public class GameMenuScreen extends MenuScreen {
         migs.removeIf(mig -> !mig.getIsAlive());
         buildings.removeIf(building -> !building.getIsAlive());
         bonuses.removeIf(bonus -> !bonus.getIsAlive());
+        effectGifs.removeIf(effect -> !effect.getIsAlive());
+        cheatChecker(delta);
         waveMessageTimer += delta;
         if (waveMessageTimer > 5)
             waveMessage.setText("");
@@ -218,14 +231,32 @@ public class GameMenuScreen extends MenuScreen {
                 trucks.isEmpty()) || nextWave;
     }
 
-    public static void setIceMode(boolean iceMode) {
-        GameMenuScreen.iceMode = iceMode;
+    public void setIceMode(boolean iceMode) {
+        this.iceMode = iceMode;
     }
 
-    public static boolean getIceMode() {
-        return GameMenuScreen.iceMode;
+    public boolean getIceMode() {
+        return iceMode;
     }
-    public static void nextWave() {
-        GameMenuScreen.nextWave = true;
+
+    public void cheatChecker(float delta) {
+        if (Keyboard.status.get(Keyboard.NEXT_WAVE))
+            nextWave = true;
+        if (Keyboard.status.get(Keyboard.RADIOACTIVE_BOMB_INCREASE))
+            plane.radioactiveBombIncrease(delta);
+        if (Keyboard.status.get(Keyboard.CLUSTER_BOMB_INCREASE))
+            plane.clusterBombIncrease(delta);
+        if (Keyboard.status.get(Keyboard.TANK_INCREASE)) {
+            tankIncreaseTime += delta;
+            if (tankIncreaseTime > minimumTime) {
+                tanks.add(new Tank(0, 0, user.getSetting()));
+                tankIncreaseTime = 0;
+            }
+        }
+        if (Keyboard.status.get(Keyboard.REVIVE))
+            return;//TODO: change it.
+    }
+    public void addEffect(EffectGif effectGif) {
+        effectGifs.add(effectGif);
     }
 }

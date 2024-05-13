@@ -4,6 +4,7 @@ import com.AtomicBomber;
 import com.View.*;
 
 public abstract class Menu {
+    protected static GameMenuScreen gameMenuScreen;
     public static void exit() {
         System.exit(0);
     }
