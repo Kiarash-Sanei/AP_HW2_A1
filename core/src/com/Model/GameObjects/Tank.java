@@ -3,6 +3,9 @@ package com.Model.GameObjects;
 import com.Control.GameMenu;
 import com.Model.GameObjects.Bullets.TankBullet;
 import com.Model.Setting;
+import com.Model.User;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,21 +19,22 @@ public class Tank extends Attacker {
     private final float radius;
     private Image imageIce;
     private ArrayList<TankBullet> tankBullets;
+    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("SoundEffect/Tank.mp3"));
 
     public Tank(float x, float y, Setting setting) {
         super(x, y);
         switch (setting.getDifficulty()) {
             case easy:
                 velocityX = 10;
-                radius = 150;
+                radius = 200;
                 break;
             case medium:
                 velocityX = 20;
-                radius = 300;
+                radius = 400;
                 break;
             case hard:
                 velocityX = 30;
-                radius = 450;
+                radius = 600;
                 break;
             default:
                 velocityX = 0;
@@ -61,6 +65,7 @@ public class Tank extends Attacker {
         }
         for (TankBullet bullet : tankBullets)
             bullet.update(deltaTime);
+        tankBullets.removeIf(tankBullet -> !tankBullet.getIsAlive());
         time += deltaTime;
     }
 
@@ -83,12 +88,25 @@ public class Tank extends Attacker {
         return radius;
     }
 
+    public ArrayList<TankBullet> getTankBullets() {
+        return tankBullets;
+    }
+
     @Override
     public void attack(Plane plane) {
-        if (GameMenu.detectPlane(this, plane) && time >= 5) {
+        if (GameMenu.tankDetectPlane(this, plane) && time >= 5) {
             float bulletAngle = (float) Math.atan((plane.getY() - y) / (plane.getX() - x));
             tankBullets.add(new TankBullet(x, y, bulletAngle));
             time = 0;
+        }
+    }
+
+    @Override
+    public void kill() {
+        isAlive = false;
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            music.setLooping(false);
+            music.play();
         }
     }
 }

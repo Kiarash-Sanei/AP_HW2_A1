@@ -14,7 +14,8 @@ public class MigBullet extends Bullet {
             image = new Image(new Texture("GameObjects/Colored/MigBullet.png"));
         image.setHeight(GameObjects.MigBullet.getHeight());
         image.setWidth(GameObjects.MigBullet.getWidth());
-        image.setRotation(angle);
+        image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+        image.setRotation((float) (angle * Math.PI) * 30);
         image.setPosition(x, y);
     }
 }

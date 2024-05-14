@@ -23,7 +23,7 @@ import static com.badlogic.gdx.Gdx.graphics;
 public class GameMenuScreen extends MenuScreen {
     private final Wave wave;
     private final User user;
-    private final Plane plane;
+    private static Plane plane;
     private float random;
     private final Random rand = new Random();
     private final ArrayList<Building> buildings;
@@ -42,11 +42,31 @@ public class GameMenuScreen extends MenuScreen {
     private final SpriteBatch batch;
     private final Label waveMessage;
     private float waveMessageTimer;
+    private Image bar0;
+    private Image bar1;
+    private Image bar2;
+    private Image bar3;
+    private Image bar4;
+    private static int killCount;
+    private static Label killCountMessage;
+    private static float accuracy;
+    private static Label accuracyMessage;
+    private static int shootCount;
+    private static Label clusterBombCountMessage;
+    private static Label radioactiveBombCountMessage;
+    static Table dataTable;
+    Table barTable;
 
 
     public GameMenuScreen(AtomicBomber atomicBomber, Wave wave) {
         super(atomicBomber);
         assetLoader();
+        user = User.getCurrentUser();
+        plane = new Plane((float) graphics.getWidth() / 2 - GameObjects.Plane.getWidth() / 2,
+                (float) graphics.getHeight() / 2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
+        killCount = 0;
+        shootCount = 0;
+        accuracy = 0f;
         switch (wave) {
             case first:
                 this.waveMessage = new Label("WAVE 1", text);
@@ -65,16 +85,42 @@ public class GameMenuScreen extends MenuScreen {
         Table waveTable = new Table();
         waveTable.setBounds(0, 0, graphics.getWidth(), graphics.getHeight());
         waveTable.add(waveMessage);
+        bar0 = new Image(new Texture("Bar/BarEmpty.png"));
+        bar1 = new Image(new Texture("Bar/BarEmpty.png"));
+        bar2 = new Image(new Texture("Bar/BarEmpty.png"));
+        bar3 = new Image(new Texture("Bar/BarEmpty.png"));
+        bar4 = new Image(new Texture("Bar/BarEmpty.png"));
+        barTable = new Table();
+        barTable.setBounds(0, graphics.getHeight() - 100, 20, 100);
+        barTable.add(bar4);
+        barTable.row();
+        barTable.add(bar3);
+        barTable.row();
+        barTable.add(bar2);
+        barTable.row();
+        barTable.add(bar1);
+        barTable.row();
+        barTable.add(bar0);
+        killCountMessage = new Label("Kill Count : " + killCount, text);
+        accuracyMessage = new Label("Accuracy : NaN", text);
+        clusterBombCountMessage = new Label("Cluster Bomb X " + plane.getClusterBombsCount(), text);
+        radioactiveBombCountMessage = new Label("Radioactive Bomb X " + plane.getRadioactiveBombsCount(), text);
+        dataTable = new Table();
+        dataTable.setBounds(graphics.getWidth() - 175, graphics.getHeight() - 100, 175, 100);
+        dataTable.add(killCountMessage);
+        dataTable.row();
+        dataTable.add(accuracyMessage);
+        dataTable.row();
+        dataTable.add(clusterBombCountMessage);
+        dataTable.row();
+        dataTable.add(radioactiveBombCountMessage);
         this.wave = wave;
         iceMode = false;
         nextWave = false;
-        user = User.getCurrentUser();
-        plane = new Plane((float) graphics.getWidth() / 2 - GameObjects.Plane.getWidth() / 2,
-                (float) graphics.getHeight() / 2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
         buildings = new ArrayList<>();
         for (int i = 0; i < wave.getBuilding(); i++) {
             while (true) {
-                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Building.getWidth()));
+                this.random = rand.nextFloat(graphics.getWidth() - GameObjects.Building.getWidth());
                 boolean flag = true;
                 for (Building building : buildings)
                     if (Math.abs(this.random - building.getX()) < GameObjects.Building.getWidth()) {
@@ -91,7 +137,7 @@ public class GameMenuScreen extends MenuScreen {
         tanks = new ArrayList<>();
         for (int i = 0; i < wave.getTank(); i++) {
             while (true) {
-                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Tank.getWidth()));
+                this.random = rand.nextFloat(graphics.getWidth() - GameObjects.Tank.getWidth());
                 boolean flag = true;
                 for (Tank tank : tanks)
                     if (Math.abs(this.random - tank.getX()) < GameObjects.Tank.getWidth()) {
@@ -106,7 +152,7 @@ public class GameMenuScreen extends MenuScreen {
         trees = new ArrayList<>();
         for (int i = 0; i < wave.getTree(); i++) {
             while (true) {
-                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
+                this.random = rand.nextFloat(graphics.getWidth() - GameObjects.Tree.getWidth());
                 boolean flag = true;
                 for (Tree tree : trees)
                     if (Math.abs(this.random - tree.getX()) < GameObjects.Tree.getWidth()) {
@@ -121,7 +167,7 @@ public class GameMenuScreen extends MenuScreen {
         trenches = new ArrayList<>();
         for (int i = 0; i < wave.getTrench(); i++) {
             while (true) {
-                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
+                this.random = rand.nextFloat(graphics.getWidth() - GameObjects.Trench.getWidth());
                 boolean flag = true;
                 for (Trench trench : trenches)
                     if (Math.abs(this.random - trench.getX()) < GameObjects.Trench.getWidth()) {
@@ -136,7 +182,7 @@ public class GameMenuScreen extends MenuScreen {
         trucks = new ArrayList<>();
         for (int i = 0; i < wave.getTruck(); i++) {
             while (true) {
-                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Truck.getWidth()));
+                this.random = rand.nextFloat(graphics.getWidth() - GameObjects.Truck.getWidth());
                 boolean flag = true;
                 for (Truck truck : trucks)
                     if (Math.abs(this.random - truck.getX()) < GameObjects.Truck.getWidth()) {
@@ -164,6 +210,8 @@ public class GameMenuScreen extends MenuScreen {
         batch = new SpriteBatch();
         stage.addActor(MenuScreen.background);
         stage.addActor(waveTable);
+        stage.addActor(barTable);
+        stage.addActor(dataTable);
     }
 
     @Override
@@ -267,21 +315,58 @@ public class GameMenuScreen extends MenuScreen {
                 effectGif.render(batch, delta);
         batch.end();
         plane.removeIf();
-        tanks.removeIf(tank -> !tank.getIsAlive());
-        trees.removeIf(tree -> !tree.getIsAlive());
-        trenches.removeIf(trench -> !trench.getIsAlive());
-        trucks.removeIf(truck -> !truck.getIsAlive());
+        for (int i = 0; i < tanks.size(); i++) {
+            Tank tank = tanks.get(i);
+            if (!tank.getIsAlive()) {
+                tanks.remove(i);
+                i--;
+                die();
+            }
+        }
+        for (int i = 0; i < trees.size(); i++) {
+            Tree tree = trees.get(i);
+            if (!tree.getIsAlive()) {
+                trees.remove(i);
+                i--;
+                die();
+            }
+        }
+        for (int i = 0; i < trucks.size(); i++) {
+            Truck truck = trucks.get(i);
+            if (!truck.getIsAlive()) {
+                trucks.remove(i);
+                i--;
+                die();
+            }
+        }
+        for (int i = 0; i < trenches.size(); i++) {
+            Trench trench = trenches.get(i);
+            if (!trench.getIsAlive()) {
+                trenches.remove(i);
+                i--;
+                die();
+            }
+        }
+        for (int i = 0; i < buildings.size(); i++) {
+            Building building = buildings.get(i);
+            if (!building.getIsAlive()) {
+                buildings.remove(i);
+                i--;
+                die();
+            }
+        }
         migs.removeIf(mig -> !mig.getIsAlive());
-        buildings.removeIf(building -> !building.getIsAlive());
         bonuses.removeIf(bonus -> !bonus.getIsAlive());
         effectGifs.removeIf(effect -> !effect.getIsAlive());
         cheatChecker(delta);
+        pause();
         waveMessageTimer += delta;
         if (waveMessageTimer > 5)
             waveMessage.setText("");
         if (this.waveOver()) {
             GameMenu.changeWave(wave);
         }
+        GameMenu.bulletCollide(migs, tanks, plane, this);
     }
 
     private boolean waveOver() {
@@ -315,11 +400,41 @@ public class GameMenuScreen extends MenuScreen {
                 tankIncreaseTime = 0;
             }
         }
-        if (Keyboard.status.get(Keyboard.REVIVE))
-            return;//TODO: change it.
+
+    }
+
+    public void pause() {
+        if (Keyboard.status.get(Keyboard.PAUSE))
+            AtomicBomber.changeScreen(new PauseMenuScreen(atomicBomber, this));
     }
 
     public void addEffect(EffectGif effectGif) {
         effectGifs.add(effectGif);
+    }
+
+    public static void shoot() {
+        shootCount++;
+        dataUpdate();
+    }
+
+    public static void die() {
+        killCount++;
+        dataUpdate();
+    }
+
+    public static int getKillCount() {
+        return killCount;
+    }
+
+    public static float getAccuracy() {
+        return accuracy;
+    }
+
+    public static void dataUpdate() {
+        accuracy = (float) killCount / (float) shootCount;
+        killCountMessage.setText("Kill Count : " + killCount);
+        accuracyMessage.setText("Accuracy : " + accuracy);
+        clusterBombCountMessage.setText("Cluster Bomb X " + plane.getClusterBombsCount());
+        radioactiveBombCountMessage.setText("Radioactive Bomb X " + plane.getRadioactiveBombsCount());
     }
 }

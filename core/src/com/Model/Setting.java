@@ -23,6 +23,7 @@ public class Setting {
     private final ArrayList<Integer> clusterBombIncrease;
     private final ArrayList<Integer> tankIncrease;
     private final ArrayList<Integer> revive;
+    private final ArrayList<Integer> pause;
 
     public Setting() {
         up = new ArrayList<>();
@@ -62,6 +63,8 @@ public class Setting {
         tankIncrease.add(Input.Keys.T);
         revive = new ArrayList<>();
         revive.add(Input.Keys.H);
+        pause = new ArrayList<>();
+        pause.add(Input.Keys.ESCAPE);
         difficulty = Difficulty.easy;
         isMute = false;
         isBlackAndWhite = false;
@@ -181,5 +184,9 @@ public class Setting {
 
     public ArrayList<Integer> getRevive() {
         return revive;
+    }
+
+    public ArrayList<Integer> getPause() {
+        return pause;
     }
 }

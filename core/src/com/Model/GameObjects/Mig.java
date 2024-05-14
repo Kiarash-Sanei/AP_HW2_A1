@@ -77,6 +77,7 @@ public class Mig extends Attacker {
         }
         for (MigBullet migBullet : migBullets)
             migBullet.update(deltaTime);
+        migBullets.removeIf(migBullet -> !migBullet.getIsAlive());
         time += deltaTime;
     }
 
@@ -103,9 +104,13 @@ public class Mig extends Attacker {
         return radius;
     }
 
+    public ArrayList<MigBullet> getMigBullets() {
+        return migBullets;
+    }
+
     @Override
     public void attack(Plane plane) {
-        if (GameMenu.detectPlane(this, plane) && time >= 5) {
+        if (GameMenu.migDetectPlane(this, plane) && time >= 5) {
             float bulletAngle = (float) Math.atan((plane.getY() - y) / (plane.getX() - x));
             migBullets.add(new MigBullet(x, y, bulletAngle));
             time = 0;

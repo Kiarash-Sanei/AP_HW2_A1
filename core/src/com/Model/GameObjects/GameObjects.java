@@ -15,8 +15,8 @@ public enum GameObjects {
     ClusterBombGif(90, 90),
     RadioactiveBombGif(60, 60),
     RegularBombGif(30, 30),
-    TankBullet(2, (float) (2 * 1826) / 1202),
-    MigBullet(2, (float) (2 * 877) / 131);
+    TankBullet(3, (float) (3 * 1826) / 1202),
+    MigBullet(3, (float) (3 * 877) / 131);
     private final float height;
     private final float width;
 

@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class RegularBomb extends Bomb {
-    public static final Music music = Gdx.audio.newMusic(Gdx.files.internal("SoundEffect/RegularBomb.mp3"));
+    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("SoundEffect/RegularBomb.mp3"));
 
     public RegularBomb(Plane plane) {
         super(plane);
@@ -30,8 +30,10 @@ public class RegularBomb extends Bomb {
             isAlive = false;
             GameMenu.addEffect(new RegularBombGif(x + GameObjects.RegularBomb.getWidth() / 2 - GameObjects.RegularBombGif.getWidth() / 2,
                     y));
-            music.setLooping(false);
-            music.play();
+            if (!User.getCurrentUser().getSetting().getMute()) {
+                music.setLooping(false);
+                music.play();
+            }
         }
         if (x < 0 ||
                 graphics.getWidth() < x)
@@ -41,7 +43,9 @@ public class RegularBomb extends Bomb {
     @Override
     public void kill() {
         isAlive = false;
-        music.setLooping(false);
-        music.play();
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            music.setLooping(false);
+            music.play();
+        }
     }
 }

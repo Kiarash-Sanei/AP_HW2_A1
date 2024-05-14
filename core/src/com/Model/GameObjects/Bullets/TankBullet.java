@@ -14,7 +14,8 @@ public class TankBullet extends Bullet {
             image = new Image(new Texture("GameObjects/Colored/TankBullet.png"));
         image.setHeight(GameObjects.TankBullet.getHeight());
         image.setWidth(GameObjects.TankBullet.getWidth());
-        image.setRotation(angle);
+        image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+        image.setRotation((float) (angle * Math.PI) * 30);
         image.setPosition(x, y);
     }
 }

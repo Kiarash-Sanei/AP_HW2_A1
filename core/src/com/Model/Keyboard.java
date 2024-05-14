@@ -17,8 +17,10 @@ public enum Keyboard {
     RADIOACTIVE_BOMB_INCREASE,
     CLUSTER_BOMB_INCREASE,
     TANK_INCREASE,
-    REVIVE;
+    REVIVE,
+    PAUSE;
     public static final HashMap<Keyboard, Boolean> status = new java.util.HashMap<>();
+
     static {
         for (Keyboard key : Keyboard.values())
             Keyboard.status.put(key, false);
@@ -55,6 +57,8 @@ public enum Keyboard {
             return Keyboard.TANK_INCREASE;
         if (setting.getRevive().contains(keyCode))
             return Keyboard.REVIVE;
+        if (setting.getPause().contains(keyCode))
+            return Keyboard.PAUSE;
         return null;
     }
 

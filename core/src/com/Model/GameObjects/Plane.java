@@ -5,7 +5,10 @@ import com.Model.GameObjects.Bombs.RadioactiveBomb;
 import com.Model.GameObjects.Bombs.RegularBomb;
 import com.Model.Keyboard;
 import com.Model.Setting;
+import com.Model.User;
 import com.View.GameMenuScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -28,6 +31,7 @@ public class Plane extends GameObject {
     private float radioactiveBombTime = minimumTime;
     private float radioactiveBombIncreaseTime = minimumTime;
     private int radioactiveBombCount = 0;
+    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("SoundEffect/Plane.mp3"));
 
     public Plane(float x, float y, Setting setting) {
         super(x, y);
@@ -53,6 +57,7 @@ public class Plane extends GameObject {
     public void regularBomb() {
         if (regularBombs.size() < 3) {
             this.regularBombs.add(new RegularBomb(this));
+            GameMenuScreen.shoot();
         }
     }
 
@@ -60,6 +65,7 @@ public class Plane extends GameObject {
         if (radioactiveBombCount > 0 && radioactiveBombs.size() < 3) {
             this.radioactiveBombCount -= 1;
             this.radioactiveBombs.add(new RadioactiveBomb(this));
+            GameMenuScreen.shoot();
         }
     }
 
@@ -67,6 +73,7 @@ public class Plane extends GameObject {
         if (clusterBombCount > 0 && clusterBombs.size() < 3) {
             this.clusterBombCount -= 1;
             this.clusterBombs.add(new ClusterBomb(this));
+            GameMenuScreen.shoot();
         }
     }
 
@@ -163,10 +170,6 @@ public class Plane extends GameObject {
             radioactiveBomb.draw(batch);
     }
 
-    public void setAlive(boolean life) {
-        isAlive = life;
-    }
-
     public void removeIf() {
         regularBombs.removeIf(regularBomb -> !regularBomb.getIsAlive());
         clusterBombs.removeIf(clusterBomb -> !clusterBomb.getIsAlive());
@@ -175,6 +178,7 @@ public class Plane extends GameObject {
 
     public void radioactiveBombIncrease() {
         this.radioactiveBombCount++;
+        GameMenuScreen.dataUpdate();
     }
 
     public void radioactiveBombIncrease(float deltaTime) {
@@ -182,11 +186,13 @@ public class Plane extends GameObject {
         if (radioactiveBombIncreaseTime > minimumTime) {
             this.radioactiveBombCount++;
             radioactiveBombIncreaseTime = 0;
+            GameMenuScreen.dataUpdate();
         }
     }
 
     public void clusterBombIncrease() {
         this.clusterBombCount++;
+        GameMenuScreen.dataUpdate();
     }
 
     public void clusterBombIncrease(float deltaTime) {
@@ -194,6 +200,7 @@ public class Plane extends GameObject {
         if (clusterBombIncreaseTime > minimumTime) {
             this.clusterBombCount++;
             clusterBombIncreaseTime = 0;
+            GameMenuScreen.dataUpdate();
         }
     }
 
@@ -207,5 +214,21 @@ public class Plane extends GameObject {
 
     public ArrayList<RadioactiveBomb> getRadioactiveBombs() {
         return this.radioactiveBombs;
+    }
+    public int getRadioactiveBombsCount() {
+        return this.radioactiveBombCount;
+    }
+
+    public int getClusterBombsCount() {
+        return this.clusterBombCount;
+    }
+
+    @Override
+    public void kill() {
+        isAlive = false;
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            music.setLooping(false);
+            music.play();
+        }
     }
 }

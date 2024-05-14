@@ -1,6 +1,8 @@
 package com.Model.GameObjects;
 
 import com.Model.User;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +12,7 @@ import static com.badlogic.gdx.Gdx.graphics;
 
 public class Truck extends GameObject {
     private Image imageIce;
+    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("SoundEffect/Truck.mp3"));
 
     public Truck(float x, float y) {
         super(x, y);
@@ -48,5 +51,14 @@ public class Truck extends GameObject {
             imageIce.draw(batch, 1);
         } else
             image.draw(batch, 1);
+    }
+
+    @Override
+    public void kill() {
+        isAlive = false;
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            music.setLooping(false);
+            music.play();
+        }
     }
 }
