@@ -3,6 +3,7 @@ package com.Model.GameObjects;
 import com.Control.GameMenu;
 import com.Model.GameObjects.Bullets.MigBullet;
 import com.Model.Setting;
+import com.Model.User;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,25 +15,24 @@ import static com.badlogic.gdx.Gdx.graphics;
 
 public class Mig extends Attacker {
     private static final float acceleration = 100;
-    private final float period;
-    private final float radius;
+    private static final float period;
+    private static final float radius;
     private static float timer;
     private Image imageIce;
     private final ArrayList<MigBullet> migBullets;
 
-    public Mig(float x, float y, Setting setting) {
-        super(x, y);
-        switch (setting.getDifficulty()) {
+    static {
+        switch (User.getCurrentUser().getSetting().getDifficulty()) {
             case easy:
-                period = 5;
+                period = 5.5f;
                 radius = 150;
                 break;
             case medium:
-                period = (float) (0.75 * 5);
+                period = (float) (0.75 * 5.5);
                 radius = 300;
                 break;
             case hard:
-                period = (float) (0.5 * 5);
+                period = (float) (0.5 * 5.5);
                 radius = 450;
                 break;
             default:
@@ -40,6 +40,15 @@ public class Mig extends Attacker {
                 radius = 0;
                 break;
         }
+        timer = period;
+    }
+
+    public static boolean canMake() {
+        return timer >= period;
+    }
+
+    public Mig(float x, float y, Setting setting) {
+        super(x, y);
         if (setting.getBlackAndWhite()) {
             this.image = new Image(new Texture("GameObjects/B&W/Mig.png"));
             this.imageIce = new Image(new Texture("GameObjects/B&W/Mig.png"));
@@ -56,6 +65,7 @@ public class Mig extends Attacker {
         accelerationX = acceleration;
         velocityX = 0;
         migBullets = new ArrayList<>();
+        timer = 0;
     }
 
     public void update(float deltaTime, boolean iceMode) {
@@ -67,7 +77,7 @@ public class Mig extends Attacker {
         }
         for (MigBullet migBullet : migBullets)
             migBullet.update(deltaTime);
-        timer += deltaTime;
+        time += deltaTime;
     }
 
     public void wrapper() {
@@ -85,12 +95,8 @@ public class Mig extends Attacker {
             migBullet.draw(batch);
     }
 
-    public void passTime(float deltaTime) {
+    public static void passTime(float deltaTime) {
         timer += deltaTime;
-    }
-
-    public float getTimer() {
-        return timer;
     }
 
     public float getRadius() {

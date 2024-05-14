@@ -24,8 +24,11 @@ public class GameMenuScreen extends MenuScreen {
     private final Wave wave;
     private final User user;
     private final Plane plane;
+    private float random;
+    private final Random rand = new Random();
     private final ArrayList<Building> buildings;
     private final ArrayList<Mig> migs;
+    private int migCount;
     private final ArrayList<Tank> tanks;
     private final ArrayList<Tree> trees;
     private final ArrayList<Trench> trenches;
@@ -65,37 +68,86 @@ public class GameMenuScreen extends MenuScreen {
         this.wave = wave;
         iceMode = false;
         nextWave = false;
-        int x;
-        Random random = new Random();
         user = User.getCurrentUser();
         plane = new Plane((float) graphics.getWidth() / 2 - GameObjects.Plane.getWidth() / 2,
                 (float) graphics.getHeight() / 2 - GameObjects.Plane.getHeight() / 2, user.getSetting());
         buildings = new ArrayList<>();
         for (int i = 0; i < wave.getBuilding(); i++) {
-            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Mig.getWidth()));
-            buildings.add(new Building(x, 0));
+            while (true) {
+                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Building.getWidth()));
+                boolean flag = true;
+                for (Building building : buildings)
+                    if (Math.abs(this.random - building.getX()) < GameObjects.Building.getWidth()) {
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    break;
+            }
+            buildings.add(new Building(this.random, 0));
         }
+        migCount = wave.getMig();
         migs = new ArrayList<>();
-        for (int i = 0; i < wave.getMig(); i++) {
-            x = random.nextInt((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
-            migs.add(new Mig(-GameObjects.Mig.getWidth(), x, user.getSetting()));
-        }
         tanks = new ArrayList<>();
-        for (int i = 0; i < wave.getTank(); i++)
-            tanks.add(new Tank(0, 0, user.getSetting()));
+        for (int i = 0; i < wave.getTank(); i++) {
+            while (true) {
+                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Tank.getWidth()));
+                boolean flag = true;
+                for (Tank tank : tanks)
+                    if (Math.abs(this.random - tank.getX()) < GameObjects.Tank.getWidth()) {
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    break;
+            }
+            tanks.add(new Tank(this.random, 0, user.getSetting()));
+        }
         trees = new ArrayList<>();
         for (int i = 0; i < wave.getTree(); i++) {
-            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
-            trees.add(new Tree(x, 0));
+            while (true) {
+                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Tree.getWidth()));
+                boolean flag = true;
+                for (Tree tree : trees)
+                    if (Math.abs(this.random - tree.getX()) < GameObjects.Tree.getWidth()) {
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    break;
+            }
+            trees.add(new Tree(this.random, 0));
         }
         trenches = new ArrayList<>();
         for (int i = 0; i < wave.getTrench(); i++) {
-            x = random.nextInt((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
-            trenches.add(new Trench(x, 0));
+            while (true) {
+                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Trench.getWidth()));
+                boolean flag = true;
+                for (Trench trench : trenches)
+                    if (Math.abs(this.random - trench.getX()) < GameObjects.Trench.getWidth()) {
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    break;
+            }
+            trenches.add(new Trench(this.random, 0));
         }
         trucks = new ArrayList<>();
-        for (int i = 0; i < wave.getTruck(); i++)
-            trucks.add(new Truck(0, 0));
+        for (int i = 0; i < wave.getTruck(); i++) {
+            while (true) {
+                this.random = rand.nextFloat((int) (graphics.getWidth() - GameObjects.Truck.getWidth()));
+                boolean flag = true;
+                for (Truck truck : trucks)
+                    if (Math.abs(this.random - truck.getX()) < GameObjects.Truck.getWidth()) {
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    break;
+            }
+            trucks.add(new Truck(this.random, 0));
+        }
         bonuses = new ArrayList<>();
         effectGifs = new ArrayList<>();
         stage.addListener(new ClickListener() {
@@ -140,6 +192,12 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
+        if (Mig.canMake() && migCount > 0) {
+            this.random = rand.nextFloat((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
+            migs.add(new Mig(-GameObjects.Mig.getWidth(), this.random, user.getSetting()));
+            migCount--;
+        }
+        Mig.passTime(delta);
         if (!buildings.isEmpty()) {
             ArrayList<Float> buildingBonuses = GameMenu.buildingCollision(buildings, plane);
             for (Float x : buildingBonuses)

@@ -189,6 +189,7 @@ public class GameMenu extends Menu {
     public static void gameOver() {
 
     }
+
     public static boolean detectPlane(Attacker attacker, Plane plane) {
         return plane.getY() <= attacker.getY() + attacker.getRadius() && plane.getX() <= attacker.getX() + attacker.getRadius();
     }
