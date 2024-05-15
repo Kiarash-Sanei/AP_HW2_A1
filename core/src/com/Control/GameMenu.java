@@ -13,6 +13,7 @@ import com.Model.Prize;
 import com.Model.Wave;
 import com.View.GameMenuScreen;
 import com.View.GameOverMenuScreen;
+import com.View.OldGameMenuScreen;
 
 import java.util.ArrayList;
 
@@ -188,9 +189,8 @@ public class GameMenu extends Menu {
             AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.third));
     }
 
-    public static void gameOver(GameMenuScreen gameMenuScreen) {
-        gameMenuScreen.pause();
-        AtomicBomber.changeScreen(new GameOverMenuScreen(AtomicBomber.getAtomicBomber(), gameMenuScreen));
+    public static void gameOver() {
+        AtomicBomber.changeScreen(new GameOverMenuScreen(AtomicBomber.getAtomicBomber()));
     }
 
     public static boolean migDetectPlane(Mig mig, Plane plane) {
@@ -204,22 +204,44 @@ public class GameMenu extends Menu {
                 plane.getX() <= tank.getX() + GameObjects.Tank.getWidth();
     }
 
-    public static void bulletCollide(ArrayList<Mig> migs, ArrayList<Tank> tanks, Plane plane,GameMenuScreen gameMenuScreen) {
+    public static void bulletCollide(ArrayList<Mig> migs, ArrayList<Tank> tanks, Plane plane, GameMenuScreen gameMenuScreen) {
         for (Mig mig : migs)
             for (MigBullet bullet : mig.getMigBullets())
                 if (plane.isOn(bullet)) {
                     plane.kill();
                     bullet.kill();
-                    gameOver(gameMenuScreen);
+                    PauseMenu.save(gameMenuScreen);
+                    gameOver();
                 }
         for (Tank tank : tanks)
             for (TankBullet bullet : tank.getTankBullets())
                 if (plane.isOn(bullet)) {
                     plane.kill();
                     bullet.kill();
-                    gameOver(gameMenuScreen);
+                    PauseMenu.save(gameMenuScreen);
+                    gameOver();
                 }
     }
+
+    public static void bulletCollide(ArrayList<Mig> migs, ArrayList<Tank> tanks, Plane plane, OldGameMenuScreen gameMenuScreen) {
+        for (Mig mig : migs)
+            for (MigBullet bullet : mig.getMigBullets())
+                if (plane.isOn(bullet)) {
+                    plane.kill();
+                    bullet.kill();
+                    PauseMenu.save(gameMenuScreen);
+                    gameOver();
+                }
+        for (Tank tank : tanks)
+            for (TankBullet bullet : tank.getTankBullets())
+                if (plane.isOn(bullet)) {
+                    plane.kill();
+                    bullet.kill();
+                    PauseMenu.save(gameMenuScreen);
+                    gameOver();
+                }
+    }
+
     public static void revive(GameMenuScreen gameMenuScreen) {
         AtomicBomber.changeScreen(gameMenuScreen);
     }

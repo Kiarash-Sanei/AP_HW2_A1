@@ -16,20 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class GameOverMenuScreen extends MenuScreen {
-    private final GameMenuScreen gameMenuScreen;
-    private Stage stageCopy;
 
-    public GameOverMenuScreen(AtomicBomber atomicBomber, GameMenuScreen gameMenuScreen) {
+    public GameOverMenuScreen(AtomicBomber atomicBomber) {
         super(atomicBomber);
         assetLoader();
-        stageCopy = new Stage();
-        this.gameMenuScreen = gameMenuScreen;
         Table table = new Table();
         table.setBounds(0, 0, graphics.getWidth(), graphics.getHeight());
         table.add(new Label("Kill Count : " + GameMenuScreen.getKillCount(), text));
         table.row();
         table.add(new Label("Accuracy : " + GameMenuScreen.getAccuracy(), text));
-        stageCopy.addListener(new ClickListener() {
+        stage.addListener(new ClickListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 return Keyboard.keyDown(keycode, User.getCurrentUser().getSetting());
@@ -40,17 +36,16 @@ public class GameOverMenuScreen extends MenuScreen {
                 return Keyboard.keyUp(keycode, User.getCurrentUser().getSetting());
             }
         });
-        stageCopy.addActor(MenuScreen.background);
-        stageCopy.addActor(table);
+        stage.addActor(MenuScreen.background);
+        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        stageCopy.act(delta);
-        stageCopy.draw();
+        stage.act(delta);
+        stage.draw();
         if (Keyboard.status.get(Keyboard.REVIVE)) {
-            gameMenuScreen.assetLoader();
-            AtomicBomber.changeScreen(gameMenuScreen);
+            AtomicBomber.changeScreen(new OldGameMenuScreen(atomicBomber));
         }
     }
 

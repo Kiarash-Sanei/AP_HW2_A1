@@ -21,18 +21,18 @@ import java.util.Random;
 import static com.badlogic.gdx.Gdx.graphics;
 
 public class GameMenuScreen extends MenuScreen {
-    private final Wave wave;
+    public final Wave wave;
     private final User user;
     private static Plane plane;
     private float random;
     private final Random rand = new Random();
-    private final ArrayList<Building> buildings;
-    private final ArrayList<Mig> migs;
+    public final ArrayList<Building> buildings;
+    public final ArrayList<Mig> migs;
     private int migCount;
-    private final ArrayList<Tank> tanks;
-    private final ArrayList<Tree> trees;
-    private final ArrayList<Trench> trenches;
-    private final ArrayList<Truck> trucks;
+    public final ArrayList<Tank> tanks;
+    public final ArrayList<Tree> trees;
+    public final ArrayList<Trench> trenches;
+    public final ArrayList<Truck> trucks;
     private final ArrayList<Bonus> bonuses;
     private boolean iceMode;
     private boolean nextWave;
@@ -42,11 +42,14 @@ public class GameMenuScreen extends MenuScreen {
     private final SpriteBatch batch;
     private final Label waveMessage;
     private float waveMessageTimer;
-    private Image bar0;
-    private Image bar1;
-    private Image bar2;
-    private Image bar3;
-    private Image bar4;
+    private static Image bar0;
+    private static Image bar1;
+    private static Image bar2;
+    private static Image bar3;
+    private static Image bar4;
+    private static String barFull;
+    private String barEmpty;
+    public static int which;
     private static int killCount;
     private static Label killCountMessage;
     private static float accuracy;
@@ -55,7 +58,6 @@ public class GameMenuScreen extends MenuScreen {
     private static Label clusterBombCountMessage;
     private static Label radioactiveBombCountMessage;
     static Table dataTable;
-    Table barTable;
 
 
     public GameMenuScreen(AtomicBomber atomicBomber, Wave wave) {
@@ -85,22 +87,17 @@ public class GameMenuScreen extends MenuScreen {
         Table waveTable = new Table();
         waveTable.setBounds(0, 0, graphics.getWidth(), graphics.getHeight());
         waveTable.add(waveMessage);
-        bar0 = new Image(new Texture("Bar/BarEmpty.png"));
-        bar1 = new Image(new Texture("Bar/BarEmpty.png"));
-        bar2 = new Image(new Texture("Bar/BarEmpty.png"));
-        bar3 = new Image(new Texture("Bar/BarEmpty.png"));
-        bar4 = new Image(new Texture("Bar/BarEmpty.png"));
-        barTable = new Table();
-        barTable.setBounds(0, graphics.getHeight() - 100, 20, 100);
-        barTable.add(bar4);
-        barTable.row();
-        barTable.add(bar3);
-        barTable.row();
-        barTable.add(bar2);
-        barTable.row();
-        barTable.add(bar1);
-        barTable.row();
-        barTable.add(bar0);
+        bar0 = new Image(new Texture(barEmpty));
+        bar0.setBounds(0, graphics.getHeight() - 100, 60, 20);
+        bar1 = new Image(new Texture(barEmpty));
+        bar1.setBounds(0, graphics.getHeight() - 80, 60, 20);
+        bar2 = new Image(new Texture(barEmpty));
+        bar2.setBounds(0, graphics.getHeight() - 60, 60, 20);
+        bar3 = new Image(new Texture(barEmpty));
+        bar3.setBounds(0, graphics.getHeight() - 40, 60, 20);
+        bar4 = new Image(new Texture(barEmpty));
+        bar4.setBounds(0, graphics.getHeight() - 20, 60, 20);
+        which = 0;
         killCountMessage = new Label("Kill Count : " + killCount, text);
         accuracyMessage = new Label("Accuracy : NaN", text);
         clusterBombCountMessage = new Label("Cluster Bomb X " + plane.getClusterBombsCount(), text);
@@ -209,8 +206,12 @@ public class GameMenuScreen extends MenuScreen {
         });
         batch = new SpriteBatch();
         stage.addActor(MenuScreen.background);
+        stage.addActor(bar0);
+        stage.addActor(bar1);
+        stage.addActor(bar2);
+        stage.addActor(bar3);
+        stage.addActor(bar4);
         stage.addActor(waveTable);
-        stage.addActor(barTable);
         stage.addActor(dataTable);
     }
 
@@ -223,12 +224,15 @@ public class GameMenuScreen extends MenuScreen {
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/B&W/Text.json");
             MenuScreen.background = new Image(new Texture("Background/B&W/Sky.png"));
+            barFull = "Bar/B&W/BarFull.png";
         } else {
             assetManager.load("Text/Colored/Text.json", Skin.class);
             assetManager.finishLoading();
             MenuScreen.text = assetManager.get("Text/Colored/Text.json");
             MenuScreen.background = new Image(new Texture("Background/Colored/Sky.png"));
+            barFull = "Bar/Colored/BarFull.png";
         }
+        barEmpty = "Bar/BarEmpty.png";
         MenuScreen.background.setHeight(graphics.getHeight());
         MenuScreen.background.setWidth(graphics.getWidth());
     }
@@ -240,6 +244,7 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
+        System.out.println(which);
         if (Mig.canMake() && migCount > 0) {
             this.random = rand.nextFloat((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
             migs.add(new Mig(-GameObjects.Mig.getWidth(), this.random, user.getSetting()));
@@ -359,7 +364,7 @@ public class GameMenuScreen extends MenuScreen {
         bonuses.removeIf(bonus -> !bonus.getIsAlive());
         effectGifs.removeIf(effect -> !effect.getIsAlive());
         cheatChecker(delta);
-        pause();
+        newPause();
         waveMessageTimer += delta;
         if (waveMessageTimer > 5)
             waveMessage.setText("");
@@ -367,6 +372,11 @@ public class GameMenuScreen extends MenuScreen {
             GameMenu.changeWave(wave);
         }
         GameMenu.bulletCollide(migs, tanks, plane, this);
+        stage.addActor(bar0);
+        stage.addActor(bar1);
+        stage.addActor(bar2);
+        stage.addActor(bar3);
+        stage.addActor(bar4);
     }
 
     private boolean waveOver() {
@@ -379,7 +389,20 @@ public class GameMenuScreen extends MenuScreen {
     }
 
     public void setIceMode(boolean iceMode) {
-        this.iceMode = iceMode;
+        if (which == 5) {
+            this.iceMode = iceMode;
+            bar0 = new Image(new Texture(barEmpty));
+            bar0.setBounds(0, graphics.getHeight() - 100, 60, 20);
+            bar1 = new Image(new Texture(barEmpty));
+            bar1.setBounds(0, graphics.getHeight() - 80, 60, 20);
+            bar2 = new Image(new Texture(barEmpty));
+            bar2.setBounds(0, graphics.getHeight() - 60, 60, 20);
+            bar3 = new Image(new Texture(barEmpty));
+            bar3.setBounds(0, graphics.getHeight() - 40, 60, 20);
+            bar4 = new Image(new Texture(barEmpty));
+            bar4.setBounds(0, graphics.getHeight() - 20, 60, 20);
+            which = 0;
+        }
     }
 
     public boolean getIceMode() {
@@ -403,7 +426,7 @@ public class GameMenuScreen extends MenuScreen {
 
     }
 
-    public void pause() {
+    public void newPause() {
         if (Keyboard.status.get(Keyboard.PAUSE))
             AtomicBomber.changeScreen(new PauseMenuScreen(atomicBomber, this));
     }
@@ -420,6 +443,7 @@ public class GameMenuScreen extends MenuScreen {
     public static void die() {
         killCount++;
         dataUpdate();
+        barUpdate();
     }
 
     public static int getKillCount() {
@@ -436,5 +460,31 @@ public class GameMenuScreen extends MenuScreen {
         accuracyMessage.setText("Accuracy : " + accuracy);
         clusterBombCountMessage.setText("Cluster Bomb X " + plane.getClusterBombsCount());
         radioactiveBombCountMessage.setText("Radioactive Bomb X " + plane.getRadioactiveBombsCount());
+    }
+
+    public static void barUpdate() {
+        switch (which) {
+            case 0:
+                bar0 = new Image(new Texture(barFull));
+                bar0.setBounds(0, graphics.getHeight() - 100, 60, 20);
+                break;
+            case 1:
+                bar1 = new Image(new Texture(barFull));
+                bar1.setBounds(0, graphics.getHeight() - 80, 60, 20);
+                break;
+            case 2:
+                bar2 = new Image(new Texture(barFull));
+                bar2.setBounds(0, graphics.getHeight() - 60, 60, 20);
+                break;
+            case 3:
+                bar3 = new Image(new Texture(barFull));
+                bar3.setBounds(0, graphics.getHeight() - 40, 60, 20);
+                break;
+            case 4:
+                bar4 = new Image(new Texture(barFull));
+                bar4.setBounds(0, graphics.getHeight() - 20, 60, 20);
+                break;
+        }
+        which++;
     }
 }

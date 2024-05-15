@@ -68,12 +68,27 @@ public class AtomicBomber extends Game {
                     oldMenuScreen.getClass() == SettingScreen.class) &&
                     (newMenuScreen.getClass() == GameMenuScreen.class)) {
                 music.stop();
-                music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GameMusic.mp3"));
+                music = Gdx.audio.newMusic(Gdx.files.internal("Musics/GameMusic1.mp3"));
             }
             music.setLooping(true);
             music.play();
+        } else {
+            music.stop();
         }
-        else {
+    }
+
+    public static void setMusic(String path) {
+        if (!User.getCurrentUser().getSetting().getMute()) {
+            music.stop();
+            music = Gdx.audio.newMusic(Gdx.files.internal(path));
+            music.setLooping(true);
+            music.play();
+        } else {
+            music.stop();
+        }
+    }
+    public static void checkMute() {
+        if (User.getCurrentUser().getSetting().getMute()) {
             music.stop();
         }
     }

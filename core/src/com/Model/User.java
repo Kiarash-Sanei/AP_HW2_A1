@@ -17,6 +17,7 @@ public class User implements Serializable {
     private int shootCount;
     private int successfulShootCount;
     private Setting setting;
+    private GameInformation gameInformation;
 
     static {
         File directory = new File("/home/kiarash-sanei/Dev/Advanced.Programming/HW2/Information/");
@@ -222,5 +223,13 @@ public class User implements Serializable {
 
     public Setting getSetting() {
         return setting;
+    }
+
+    public void setGameInformation(GameInformation gameInformation) {
+        this.gameInformation = gameInformation;
+    }
+
+    public GameInformation getGameInformation() {
+        return gameInformation;
     }
 }

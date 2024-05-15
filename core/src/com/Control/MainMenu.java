@@ -1,8 +1,11 @@
 package com.Control;
 
 import com.AtomicBomber;
+import com.Model.User;
 import com.Model.Wave;
 import com.View.*;
+
+import java.util.Objects;
 
 public class MainMenu extends Menu {
     public static void newGame() {
@@ -11,6 +14,7 @@ public class MainMenu extends Menu {
     }
 
     public static void previousGame() {
-        AtomicBomber.changeScreen(new OldGameMenuScreen(AtomicBomber.getAtomicBomber()));
+        if (!Objects.equals(User.getCurrentUser().getUsername(), "_guest_"))
+            AtomicBomber.changeScreen(new OldGameMenuScreen(AtomicBomber.getAtomicBomber()));
     }
 }
