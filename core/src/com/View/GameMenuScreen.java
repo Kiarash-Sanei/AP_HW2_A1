@@ -206,11 +206,6 @@ public class GameMenuScreen extends MenuScreen {
         });
         batch = new SpriteBatch();
         stage.addActor(MenuScreen.background);
-        stage.addActor(bar0);
-        stage.addActor(bar1);
-        stage.addActor(bar2);
-        stage.addActor(bar3);
-        stage.addActor(bar4);
         stage.addActor(waveTable);
         stage.addActor(dataTable);
     }
@@ -244,7 +239,6 @@ public class GameMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
-        System.out.println(which);
         if (Mig.canMake() && migCount > 0) {
             this.random = rand.nextFloat((int) (GameObjects.Mig.getHeight() * 5), (int) (graphics.getHeight() - GameObjects.Mig.getHeight()));
             migs.add(new Mig(-GameObjects.Mig.getWidth(), this.random, user.getSetting()));
@@ -318,6 +312,11 @@ public class GameMenuScreen extends MenuScreen {
         if (!effectGifs.isEmpty())
             for (EffectGif effectGif : effectGifs)
                 effectGif.render(batch, delta);
+        bar0.draw(batch,1);
+        bar1.draw(batch,1);
+        bar2.draw(batch,1);
+        bar3.draw(batch,1);
+        bar4.draw(batch,1);
         batch.end();
         plane.removeIf();
         for (int i = 0; i < tanks.size(); i++) {
@@ -372,11 +371,6 @@ public class GameMenuScreen extends MenuScreen {
             GameMenu.changeWave(wave);
         }
         GameMenu.bulletCollide(migs, tanks, plane, this);
-        stage.addActor(bar0);
-        stage.addActor(bar1);
-        stage.addActor(bar2);
-        stage.addActor(bar3);
-        stage.addActor(bar4);
     }
 
     private boolean waveOver() {
