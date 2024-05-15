@@ -6,7 +6,6 @@ import com.Model.GameObjects.*;
 import com.Model.GameObjects.Bombs.ClusterBomb;
 import com.Model.GameObjects.Bombs.RadioactiveBomb;
 import com.Model.GameObjects.Bombs.RegularBomb;
-import com.Model.GameObjects.Bullets.Bullet;
 import com.Model.GameObjects.Bullets.MigBullet;
 import com.Model.GameObjects.Bullets.TankBullet;
 import com.Model.Prize;
@@ -189,8 +188,12 @@ public class GameMenu extends Menu {
             AtomicBomber.changeScreen(new GameMenuScreen(AtomicBomber.getAtomicBomber(), Wave.third));
     }
 
-    public static void gameOver() {
-        AtomicBomber.changeScreen(new GameOverMenuScreen(AtomicBomber.getAtomicBomber()));
+    public static void gameOver(GameMenuScreen gameMenuScreen) {
+        AtomicBomber.changeScreen(new GameOverMenuScreen(AtomicBomber.getAtomicBomber(), GameMenuScreen.getKillCount(), gameMenuScreen.wave.value(), GameMenuScreen.getAccuracy()));
+    }
+
+    public static void gameOver(OldGameMenuScreen gameMenuScreen) {
+        AtomicBomber.changeScreen(new GameOverMenuScreen(AtomicBomber.getAtomicBomber(), GameMenuScreen.getKillCount(), gameMenuScreen.wave.value(), GameMenuScreen.getAccuracy()));
     }
 
     public static boolean migDetectPlane(Mig mig, Plane plane) {
@@ -211,7 +214,7 @@ public class GameMenu extends Menu {
                     plane.kill();
                     bullet.kill();
                     PauseMenu.save(gameMenuScreen);
-                    gameOver();
+                    gameOver(gameMenuScreen);
                 }
         for (Tank tank : tanks)
             for (TankBullet bullet : tank.getTankBullets())
@@ -219,7 +222,7 @@ public class GameMenu extends Menu {
                     plane.kill();
                     bullet.kill();
                     PauseMenu.save(gameMenuScreen);
-                    gameOver();
+                    gameOver(gameMenuScreen);
                 }
     }
 
@@ -230,7 +233,7 @@ public class GameMenu extends Menu {
                     plane.kill();
                     bullet.kill();
                     PauseMenu.save(gameMenuScreen);
-                    gameOver();
+                    gameOver(gameMenuScreen);
                 }
         for (Tank tank : tanks)
             for (TankBullet bullet : tank.getTankBullets())
@@ -238,7 +241,7 @@ public class GameMenu extends Menu {
                     plane.kill();
                     bullet.kill();
                     PauseMenu.save(gameMenuScreen);
-                    gameOver();
+                    gameOver(gameMenuScreen);
                 }
     }
 

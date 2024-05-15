@@ -232,4 +232,20 @@ public class User implements Serializable {
     public GameInformation getGameInformation() {
         return gameInformation;
     }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setLastWave(int lastWave) {
+        this.lastWave = lastWave;
+    }
+
+    public void setShootCount(int shootCount) {
+        this.shootCount = shootCount;
+    }
+
+    public void setSuccessfulShootCount(int successfulShootCount) {
+        this.successfulShootCount = successfulShootCount;
+    }
 }
